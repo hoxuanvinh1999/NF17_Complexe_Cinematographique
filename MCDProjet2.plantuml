@@ -61,7 +61,7 @@
     capacite: int
   }
 
-  Salle "1" -- "1..*" Seance :  projetedans >
+  Seance "1..*" -- "1*" Salle :  projetedans >
   Vendeur "1" -- "1..*" Entree : vend >
   Vendeur "1" -- "1..*" produit : vendre >
   produit <|-- boisson
