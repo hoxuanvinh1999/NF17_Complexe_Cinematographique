@@ -1,0 +1,111 @@
+  @startuml
+  class Film{
+   code: text {key}
+   titre: text
+   dateSortie: date
+   Age: int
+  }
+  class Distributeur{
+   nom: text
+   prenom: text
+  }
+  class Relisateur{
+   nom: text
+   prenom: text
+  }
+  class Producteur{
+   nom: text
+   prenom: text
+  }
+  class Genre{
+   type: text
+  }
+   Distributeur "1..*" -- "1..*" Film : gérant >
+   Relisateur "1..*" -- "1..*" Film : participé >
+   Producteur "1..*" -- "1..*" Film : crée >
+   Genre "1..*" -- "1..*" Film : comprises >
+
+
+
+
+  class Seance{
+   codeSeance: text {key}
+   jour: date
+   heureDebut: int
+   duree: int
+   placeOccupees: int
+   placeVendues: int
+  }
+
+  class Vendeur{
+    nom: text
+    prenom: text
+  }
+
+  class produit{
+  }
+
+  class boisson {
+  }
+
+  class alimentaire{
+  }
+
+
+  class Projection{
+   doublage:  {VF, VOST}
+  }
+
+  class Salle{
+    nombre: text
+    capacite: int
+  }
+
+  Salle "1" -- "1..*" Seance :  projetedans >
+  Vendeur "1" -- "1..*" Entree : vend >
+  Vendeur "1" -- "1..*" produit : vendre >
+  produit <|-- boisson
+  produit <|-- alimentaire
+
+
+
+  class Client{
+   idClient: text {key}
+   nom: string
+   prenom: string
+   dateNaissance: date
+  }
+  class Noter{
+   value: 0..5
+  }
+
+  class Entree{
+   code: text {key}
+  }
+
+  class ticketUnitaire{
+    typeTarif : {Adulte, Etudiant, Enfant, Dimanche}
+  }
+  class ticketCatre{
+  }
+
+  class Abonnement {
+   placeEncore: int
+  }
+
+
+
+  (Client, Film) .. Noter
+
+  Seance "1..*" -- "1" Projection : projecter >
+  Projection "1..*" -- "1*" Film : projectionDe >
+
+  Client "1" -- "0..*" Entree : acheter >
+  Entree "1..Max" -- "1..*" Seance : pour >
+
+  Entree <|-- ticketCatre
+  Entree <|-- ticketUnitaire
+
+  Client "1" -- "0..1" Abonnement : inscrit >
+
+  @enduml
