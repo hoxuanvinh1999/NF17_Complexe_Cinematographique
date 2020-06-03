@@ -57,10 +57,12 @@ donne(#idAbonnement=>Abonnement(idAbonnement), idVendeur=>Vendeur(idVendeur))
 Vues :
 
 vTauxdeplace(codeSeance, jour, placeOccupees, placeVendues, codeFilm, taux)
+vNombreClientRegardantFilm(codeFilm, nombre_Client)
+vLaVenteTicket(nombre_ticket, argent_total)
+vEvaluePargenre(idGenre, nombre_films, notemoyenne, nombre_Client)
 vMoyenneduFilm(codeFilm, notemoyenne)
-v
-
-
+vRevenusdesproduits(idproduit, quantité_total, argent_total)
+vTauxinscriptionmembres(total_Client, total_Abonnement, taux)
 
 
 
