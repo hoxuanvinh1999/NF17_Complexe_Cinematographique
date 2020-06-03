@@ -1,111 +1,122 @@
   @startuml
   class Film{
-   code: text {key}
-   titre: text
-   dateSortie: date
-   Age: int
-  }
-  class Distributeur{
-   nom: text
-   prenom: text
-  }
-  class Relisateur{
-   nom: text
-   prenom: text
-  }
-  class Producteur{
-   nom: text
-   prenom: text
-  }
-  class Genre{
-   type: text
-  }
-   Distributeur "1..*" -- "1..*" Film : gérant >
-   Relisateur "1..*" -- "1..*" Film : participé >
-   Producteur "1..*" -- "1..*" Film : crée >
-   Genre "1..*" -- "1..*" Film : comprises >
+     code: text {key}
+     titre: text
+     dateSortie: date
+     ageLimit: int
+    }
+    class Distributeur{
+     nom: text
+    }
+    class Relisateur{
+     nom: text
+     prenom: text
+    }
+    class Producteur{
+     nom: text
+     prenom: text
+    }
+    class Genre{
+     type: text
+    }
+     Distributeur "1..*" -- "1..*" Film : gérant >
+     Relisateur "1..*" -- "1..*" Film : participé >
+     Producteur "1..*" -- "1..*" Film : crée >
+     Genre "1..*" -- "1..*" Film : comprises >
 
 
 
 
-  class Seance{
-   codeSeance: text {key}
-   jour: date
-   heureDebut: int
-   duree: int
-   placeOccupees: int
-   placeVendues: int
-  }
+    class Seance{
+     codeSeance: text {key}
+     jour: date
+     heureDebut: int
+     duree: int
+     placeOccupees: int
+     placeVendues: int
+    }
 
-  class Vendeur{
-    nom: text
-    prenom: text
-  }
+    class Vendeur{
+      nom: text
+      prenom: text
+    }
 
-  class produit{
-  }
+    class produit{
+    idproduit: int
+    }
 
-  class boisson {
-  }
+    class boisson {
+    nomboisson: text
+    tarifboisson: int
+    }
 
-  class alimentaire{
-  }
-
-
-  class Projection{
-   doublage:  {VF, VOST}
-  }
-
-  class Salle{
-    nombre: text
-    capacite: int
-  }
-
-  Seance "1..*" -- "1*" Salle :  projetedans >
-  Vendeur "1" -- "1..*" Entree : vend >
-  Vendeur "1" -- "1..*" produit : vendre >
-  produit <|-- boisson
-  produit <|-- alimentaire
+    class alimentaire{
+    nomalimentaire: text
+    tarifalimentaire: int
+    }
 
 
+    class Projection{
+     doublage:  {VF, VOST}
+    }
 
-  class Client{
-   idClient: text {key}
-   nom: string
-   prenom: string
-   dateNaissance: date
-  }
-  class Noter{
-   value: 0..5
-  }
+    class Salle{
+      nombre: text
+      capacite: int
+    }
 
-  class Entree{
-   code: text {key}
-  }
-
-  class ticketUnitaire{
-    typeTarif : {Adulte, Etudiant, Enfant, Dimanche}
-  }
-  class ticketCatre{
-  }
-
-  class Abonnement {
-   placeEncore: int
-  }
+    Seance "1..*" -- "1*" Salle :  projetedans >
+    Vendeur "1" -- "1..*" Entree : vend >
+    Vendeur "1" -- "1..*" produit : vendre >
+    Vendeur "1" -- "0..*" Abonnement: donne >
+    produit <|-- boisson
+    produit <|-- alimentaire
 
 
 
-  (Client, Film) .. Noter
+    class Client{
+     idClient: text {key}
+     nom: string
+     prenom: string
+     dateNaissance: date
+     ageClient: int
+    }
+    class Noter{
+     value: 0..5
+    }
 
-  Seance "1..*" -- "1" Projection : projecter >
-  Projection "1..*" -- "1*" Film : projectionDe >
+    class Entree{
+     codeticket: text {key}
+    }
 
-  Client "1" -- "0..*" Entree : acheter >
-  Entree "1..Max" -- "1..*" Seance : pour >
+    class ticketUnitaire{
+      typeTarif : {Adulte, Etudiant, Enfant, Dimanche}
+    }
+    class ticketCatre{
+    }
 
-  Entree <|-- ticketCatre
-  Entree <|-- ticketUnitaire
+    class Abonnement {
+     placeEncore: int
+    }
 
-  Client "1" -- "0..1" Abonnement : inscrit >
+    class payer{
+    quantité: int
+    }
 
+
+
+    (Client, Film) .. Noter
+
+    Seance "1..*" -- "1" Projection : projecter >
+    Projection "1..*" -- "1*" Film : projectionDe >
+
+    Client "1" -- "0..*" Entree : acheter >
+    Client "0..*" -- "0..*" produit: payer >
+    Entree "1..Max" -- "1..*" Seance : pour >
+    (Client, produit)..payer
+
+    Entree <|-- ticketCatre
+    Entree <|-- ticketUnitaire
+
+    Client "1" -- "0..1" Abonnement : inscrit >
   @enduml
