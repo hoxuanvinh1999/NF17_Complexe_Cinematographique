@@ -1,0 +1,106 @@
+Relations:
+
+Seance(#codeSeance: int, jour: date, heureDebut: int, duree: int, placeOccuppees: int, placeVendues: int)
+avec jour, heureDebut, duree, placeOccuppees, placeVendues NOT NULL
+avec heureDebut <= 2359 AND heureDebut >= 0
+
+Salle(#idSalle: int, nombre: varchar, capacite: int)
+avec nombre, capacite NOT NULL
+avec capacite > 0
+
+projetedans(#idSalle=>Salle(idSalle), #codeSeance=>Seance(codeSeance))
+
+Film(#codeFilm: int, titre: varchar, dateSortie: date, ageLimit: int)
+avec titre, dateSortie, ageLimit NOT NULL
+avec ageLimit > 0
+
+Projection(#idProjection: int, #codeFilm=>Film(codeFilm), doublage : {VF, VOST}) avec doublage NOT NULL
+projecter(#codeSeance=>Seance(codeSeance), #idProjection=>Projection(idProjection))
+
+Distributeur(#idDistributeur: int, nom: varchar) avec nom NOT NULL
+Relisateur(#idRealisateur: int, nom: varchar, prenom: varchar) avec nom, prenom NOT NULL
+Producteur(#idProducteur: int, nom: varchar,  prenom: varchar) avec nom, prenom NOT NULL
+Genre(#idGenre: int, type: varchar) avec type NOT NULL
+
+gérant(#idDistributeur=>Distributeur(idDistributeur), #codeFilm=>Film(codeFilm))
+participé(#idRealisateur=>Relisateur(idRealisateur), #codeFilm=>Film(codeFilm))
+crée(#idProducteur=>Producteur(idProducteur), #codeFilm=>Film(codeFilm))
+comprises(#idGenre=>Genre(idGenre), #codeFilm=>Film(codeFilm))
+
+
+Client(#idClient: int, nom: varchar, prenom: varchar, dateNaissance: date, ageClient: int)
+avec nom, prenom, dateNaissance, ageClient NOT NULL
+avec dateNaissance <= date_courant
+
+Noter(#idClient=>Client(idClient), #codeFilm=>Film(codeFilm), value: int)
+avec value >= 0 AND value <= 5
+
+Vendeur(#idVendeur: int, nom: varchar, prenom: varchar) avec nom, prenom NOT NULL
+
+Entree(#codeticket: int, #idVendeur=>Vendeur(idVendeur), #idClient=>Client(idClient), #codeSeance=>Seance(codeSeance))
+ticketCatre(#codeticket=>Entree)
+ticketUnitaire(#codeticket=>Entree, typeTarif:{Adulte, Etudiant, Enfant, Dimanche}) avec typeTarif NOT NULL
+
+
+Abonnement(#idAbonnement: int, #idClient=>Client(idClient), #idVendeur=>Vendeur(idVendeur), placeEncore: int) avec placeEncore >0
+
+produit(#idproduit: int)
+boisson(#idproduit=>produit, nomboisson: varchar, tarifboisson: int) avec nomboisson, tarifboisson NOT NULL
+alimentaire(#idproduit=>produit, nomalimentaire: varchar, tarifalimentaire: int) avec nomalimentaire, tarifalimentaire NOT NULL
+payer(#idproduit=>produit(idproduit), #idClient=>Client(idClient), quantité: int) avec quantité NOT NULL AND quantité > 0
+vendre(#idproduit=>produit(idproduit), idVendeur=>Vendeur(idVendeur))
+donne(#idAbonnement=>Abonnement(idAbonnement), idVendeur=>Vendeur(idVendeur))
+
+
+
+
+Vues :
+
+vTauxdeplace(codeSeance, jour, placeOccupees, placeVendues, codeFilm, taux)
+vMoyenneduFilm(codeFilm, notemoyenne)
+v
+
+
+
+
+
+Contraintes complexes :
+
+Conditions: Entree et 2 types de tickets
+
+R1=Projection(Entree,codeticket)
+R2=Intersection(R1, ticketCatre)
+R3=Intersection(R1, ticketUnitaire.codeticket)
+R4=Intersection(R2, R3)
+R5=Union(R2, R3)
+
+avec R5=R1 et R4={} c'est OK
+
+Conditions: produit
+
+R1=Projection(produit, idproduit)
+R2=Intersection(R1, boisson.idproduit)
+R3=Intersection(R1, alimentaire.idproduit)
+R4=Intersection(R2, R3)
+R5=Union(R2, R3)
+
+avec R5=R1 et R4={} c'est OK
+
+condition: Aucun client ne regarde des films au-delà de l'âge prescrit
+
+R1=Jointure(Entree, Seance, Entree.codeSeance=Seance.codeSeance)
+R2=Jointure(R1, Client, R1.idClient=Client.idClient)
+R3=Jointure(R2, Projection, R2.idSeance=Projection.idSeance)
+R4=Jointure(R3, Film, R3.codeFilm=Film.codeFilm)
+R5=Restriction(R4, Client.ageClient < Film.ageLimit)
+
+avec R5={} C'est OK
+
+condition: Aucun Seance correspondant
+
+R1=Jointure(Seance, Salle, Seance.idSeance=Salle.idSeance)
+R2=Projection(R1, jour)
+R3=Projection(R1, heureDebut)
+R4=Projection(R1, idSalle)
+
+avec (R2<R1) AND (R3<R1) AND (R4<R1) c'est pas ok
