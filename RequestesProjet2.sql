@@ -18,8 +18,8 @@ CREATE TABLE Client(
   nom varchar NOT NULL,
   prenom varchar NOT NULL,
   dateNaissance DATE NOT NULL,
-  ageClient = DATEDIFF(year, dateNaissance, CURDATE()),
-  CONSTRAINT check_dateNaissance CHECK (dateNaissance <= now())
+  ageClient AS DATEDIFF(year, dateNaissance, GETDATE()),
+  CONSTRAINT check_dateNaissance CHECK (dateNaissance <= GETDATE())
 )
 
 CREATE TABLE Film(
@@ -27,7 +27,7 @@ CREATE TABLE Film(
   titre varchar NOT NULL,
   dateSortie DATE NOT NULL,
   ageLimit int NOT NULL,
-  CONSTRAINT check_dateSortie CHECK (dateSortie <= now()),
+  CONSTRAINT check_dateSortie CHECK (dateSortie <= GETDATE()),
   CONSTRAINT check_ageLimit CHECK (ageLimit > 0)
 )
 
@@ -58,8 +58,8 @@ CREATE TABLE gérant(
   idDistributeur int NOT NULL,
   codeFilm int NOT NULL,
   PRIMARY KEY(idDistributeur, codeFilm),
-  CONSTRAINT fk_gérant FOREIGN KEY (idDistributeur) REFERENCES Distributeur(idDistributeur),
-  CONSTRAINT fk_gérant FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
+  CONSTRAINT fk_gérant_distributeur FOREIGN KEY (idDistributeur) REFERENCES Distributeur(idDistributeur),
+  CONSTRAINT fk_gérant_film FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
 )
 
 CREATE TABLE participé(
@@ -97,7 +97,7 @@ CREATE TABLE Salle(
 CREATE TABLE projetedans(
   idSalle int NOT NULL,
   codeSeance int NOT NULL,
-  PRIMARY KEY(idSalle, codeSeance),
+  PRIMARY KEY(idSalle,codeSeance),
   CONSTRAINT fk_projetedans FOREIGN KEY (idSalle) REFERENCES Salle(idSalle),
   CONSTRAINT fk_projetedans FOREIGN KEY (codeSeance) REFERENCES Seance(codeSeance)
 )
@@ -148,7 +148,7 @@ CREATE TABLE ticketUnitaire(
   typeTarif varchar NOT NULL,
   PRIMARY KEY(codeticket),
   CONSTRAINT fk_ticketUnitaire FOREIGN KEY (codeticket) REFERENCES Entree(codeticket),
-  CONSTRAINT check_typeTarif CHECK (typeTarif IN {'Adulte','Etudiant','Enfant','Dimanche'})
+  CONSTRAINT check_typeTarif CHECK (typeTarif IN ('Adulte','Etudiant','Enfant','Dimanche'))
 )
 
 -----------------------------------------------------------------------------------------------------
@@ -259,16 +259,16 @@ INSERT INTO Realisateur (idRealisateur, nom, prenom) VALUES(42349,'Kazuaki','Ima
 INSERT INTO Realisateur (idRealisateur, nom, prenom) VALUES(42340,'Russo','Joe');
 INSERT INTO Realisateur (idRealisateur, nom, prenom) VALUES(42350,'Russo','Anthony');
 
-INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32341, 'Feige' 'Kevin');
-INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32342, 'Arad' 'Avi');
-INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32343, 'Lee' 'Stan');
-INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32344, 'Tyler' 'Liv');
-INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32345, 'Safran' 'Peter');
-INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32346, 'Cowan' 'Rob');
-INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32347, 'James' 'E.L');
-INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32348, 'Lasseter' 'John');
-INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32349, 'Rivera' 'Jonas');
-INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32340, 'Genki' 'Kawamura');
+INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32341, 'Feige','Kevin');
+INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32342, 'Arad','Avi');
+INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32343, 'Lee','Stan');
+INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32344, 'Tyler','Liv');
+INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32345, 'Safran','Peter');
+INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32346, 'Cowan','Rob');
+INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32347, 'James','E.L');
+INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32348, 'Lasseter','John');
+INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32349, 'Rivera','Jonas');
+INSERT INTO Producteur (idProducteur, nom, prenom) VALUES (32340, 'Genki','Kawamura');
 
 
 
@@ -350,7 +350,7 @@ INSERT INTO Client(idClient, nom, prenom, dateNaissance) VALUES (22222,'Kevin','
 INSERT INTO Client(idClient, nom, prenom, dateNaissance) VALUES (33333,'Alain','Anne','1999-10-30');
 INSERT INTO Client(idClient, nom, prenom, dateNaissance) VALUES (44444,'Masson','Sam','2004-12-27');
 INSERT INTO Client(idClient, nom, prenom, dateNaissance) VALUES (55555,'David','Melodie','1980-04-15');
-INSERT INTO Client(idClient, nom, prenom, dateNaissance) VALUES (66666,'Descoteaux','Pro','2006-05-22');
+INSERT INTO Client(idClient, nom, prenom, dateNaissance) VALUES (66666,'Descoteaux','Propi','2006-05-22');
 INSERT INTO Client(idClient, nom, prenom, dateNaissance) VALUES (77777,'Devoe','Jack','1999-09-07');
 INSERT INTO Client(idClient, nom, prenom, dateNaissance) VALUES (88888,'Hubert','Hubert','2000-08-18');
 INSERT INTO Client(idClient, nom, prenom, dateNaissance) VALUES (99999,'Nguyen','LeLyBang','2013-03-06');
@@ -384,11 +384,11 @@ INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVend
 
 --Salle--
 
-INSERT INTO Salle(idSalle, nombre, capacite) VALUES (100,'A100',100,);
-INSERT INTO Salle(idSalle, nombre, capacite) VALUES (200,'A200',100,);
-INSERT INTO Salle(idSalle, nombre, capacite) VALUES (300,'A300',50,);
-INSERT INTO Salle(idSalle, nombre, capacite) VALUES (400,'B400',150,);
-INSERT INTO Salle(idSalle, nombre, capacite) VALUES (500,'B500',200,);
+INSERT INTO Salle(idSalle, nombre, capacite) VALUES (100,'A100',100);
+INSERT INTO Salle(idSalle, nombre, capacite) VALUES (200,'A200',100);
+INSERT INTO Salle(idSalle, nombre, capacite) VALUES (300,'A300',50);
+INSERT INTO Salle(idSalle, nombre, capacite) VALUES (400,'B400',150);
+INSERT INTO Salle(idSalle, nombre, capacite) VALUES (500,'B500',200);
 
 --Projection
 
@@ -584,7 +584,6 @@ INSERT INTO Entree(codeticket, idVendeur, idClient, codeSeance) VALUES (100088,5
 
 --typeEntree--
 
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100002,'Adulte');
 INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100003,'Adulte');
 INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100004,'Adulte');
 INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100005,'Adulte');
@@ -594,7 +593,6 @@ INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100009,'Etudiant');
 INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100010,'Adulte');
 INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100011,'Etudiant');
 INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100012,'Enfant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100014,'Adulte');
 INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100015,'Adulte');
 INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100016,'Adulte');
 INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100017,'Adulte');
@@ -654,8 +652,10 @@ INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100085,'Etudiant');
 INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100087,'Adulte');
 
 INSERT INTO ticketCatre(codeticket) VALUES (100001);
+INSERT INTO ticketCatre(codeticket) VALUES (100002);
 INSERT INTO ticketCatre(codeticket) VALUES (100008);
 INSERT INTO ticketCatre(codeticket) VALUES (100013);
+INSERT INTO ticketCatre(codeticket) VALUES (100014);
 INSERT INTO ticketCatre(codeticket) VALUES (100023);
 INSERT INTO ticketCatre(codeticket) VALUES (100030);
 INSERT INTO ticketCatre(codeticket) VALUES (100040);
