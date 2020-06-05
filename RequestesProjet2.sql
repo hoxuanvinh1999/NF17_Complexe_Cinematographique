@@ -758,13 +758,13 @@ INSERT INTO produit(idproduit) VALUES (913004);
 INSERT INTO produit(idproduit) VALUES (913005);
 INSERT INTO produit(idproduit) VALUES (913006);
 
-INSERT INTO boisson(idproduit, nomboisson, tarifboisson) VALUES (913001,Eau,4);
-INSERT INTO boisson(idproduit, nomboisson, tarifboisson) VALUES (913002,Soda,8);
-INSERT INTO boisson(idproduit, nomboisson, tarifboisson) VALUES (913003,Coca,8);
+INSERT INTO boisson(idproduit, nomboisson, tarifboisson) VALUES (913001,'Eau',4);
+INSERT INTO boisson(idproduit, nomboisson, tarifboisson) VALUES (913002,'Soda',8);
+INSERT INTO boisson(idproduit, nomboisson, tarifboisson) VALUES (913003,'Coca',8);
 
-INSERT INTO alimentaire(idproduit, nomalimentaire, tarifalimentaire) VALUES (913004,Pop-corn,10);
-INSERT INTO alimentaire(idproduit, nomalimentaire, tarifalimentaire) VALUES (913005,Biscuits,5);
-INSERT INTO alimentaire(idproduit, nomalimentaire, tarifalimentaire) VALUES (913006,Crêpe,8);
+INSERT INTO alimentaire(idproduit, nomalimentaire, tarifalimentaire) VALUES (913004,'Pop-corn',10);
+INSERT INTO alimentaire(idproduit, nomalimentaire, tarifalimentaire) VALUES (913005,'Biscuits',5);
+INSERT INTO alimentaire(idproduit, nomalimentaire, tarifalimentaire) VALUES (913006,'Crêpe',8);
 
 --payer et vendre--
 
