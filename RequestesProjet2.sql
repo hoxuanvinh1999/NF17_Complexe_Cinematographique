@@ -66,24 +66,24 @@ CREATE TABLE participé(
   idRealisateur int NOT NULL,
   codeFilm int NOT NULL,
   PRIMARY KEY(idRealisateur, codeFilm),
-  CONSTRAINT fk_participé FOREIGN KEY (idRealisateur) REFERENCES Relisateur(idRealisateur),
-  CONSTRAINT fk_participé FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
+  CONSTRAINT fk_participé_Realisateur FOREIGN KEY (idRealisateur) REFERENCES Relisateur(idRealisateur),
+  CONSTRAINT fk_participé_Film FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
 )
 
 CREATE TABLE crée(
   idProducteur int NOT NULL,
   codeFilm int NOT NULL,
   PRIMARY KEY(idProducteur, codeFilm),
-  CONSTRAINT fk_crée FOREIGN KEY (idProducteur) REFERENCES Producteur(idProducteur),
-  CONSTRAINT fk_crée FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
+  CONSTRAINT fk_crée_Producteur FOREIGN KEY (idProducteur) REFERENCES Producteur(idProducteur),
+  CONSTRAINT fk_crée_Film FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
 )
 
 CREATE TABLE comprises(
   idGenre int NOT NULL,
   codeFilm int NOT NULL,
   PRIMARY KEY(idGenre, codeFilm),
-  CONSTRAINT fk_comprises FOREIGN KEY (idGenre) REFERENCES Genre(idGenre),
-  CONSTRAINT fk_comprises FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
+  CONSTRAINT fk_comprises_Genre FOREIGN KEY (idGenre) REFERENCES Genre(idGenre),
+  CONSTRAINT fk_comprises_Film FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
 )
 
 ------------------------------------------------------------------------------------------------------
@@ -98,8 +98,8 @@ CREATE TABLE projetedans(
   idSalle int NOT NULL,
   codeSeance int NOT NULL,
   PRIMARY KEY(idSalle,codeSeance),
-  CONSTRAINT fk_projetedans FOREIGN KEY (idSalle) REFERENCES Salle(idSalle),
-  CONSTRAINT fk_projetedans FOREIGN KEY (codeSeance) REFERENCES Seance(codeSeance)
+  CONSTRAINT fk_projetedans_Salle FOREIGN KEY (idSalle) REFERENCES Salle(idSalle),
+  CONSTRAINT fk_projetedans_Seance FOREIGN KEY (codeSeance) REFERENCES Seance(codeSeance)
 )
 
 -------------------------------------------------------------------------------------------------------
@@ -115,8 +115,8 @@ CREATE TABLE projecter(
   codeSeance int NOT NULL,
   idProjection int NOT NULL,
   PRIMARY KEY(codeSeance, idProjection),
-  CONSTRAINT fk_projecter FOREIGN KEY (codeSeance) REFERENCES Seance(codeSeance),
-  CONSTRAINT fk_projecter FOREIGN KEY (idProjection) REFERENCES Projection(idProjection)
+  CONSTRAINT fk_projecter_Seance FOREIGN KEY (codeSeance) REFERENCES Seance(codeSeance),
+  CONSTRAINT fk_projecter_Projection FOREIGN KEY (idProjection) REFERENCES Projection(idProjection)
 )
 
 ------------------------------------------------------------------------------------------------
@@ -132,9 +132,9 @@ CREATE TABLE Entree(
   idVendeur int NOT NULL,
   idClient int NOT NULL,
   codeSeance int NOT NULL,
-  CONSTRAINT fk_Entree FOREIGN KEY (idVendeur) REFERENCES Vendeur(idVendeur),
-  CONSTRAINT fk_Entree FOREIGN KEY (idClient) REFERENCES Client(idClient),
-  CONSTRAINT fk_Entree FOREIGN KEY (codeSeance) REFERENCES Seance(codeSeance)
+  CONSTRAINT fk_Entree_Vendeur FOREIGN KEY (idVendeur) REFERENCES Vendeur(idVendeur),
+  CONSTRAINT fk_Entree_Client FOREIGN KEY (idClient) REFERENCES Client(idClient),
+  CONSTRAINT fk_Entree_Seance FOREIGN KEY (codeSeance) REFERENCES Seance(codeSeance)
 )
 
 CREATE TABLE ticketCatre(
@@ -158,8 +158,8 @@ CREATE TABLE Abonnement(
   idVendeur int NOT NULL,
   placeEncore int NOT NULL,
   CONSTRAINT check_placeEncore CHECK (placeEncore > 0),
-  CONSTRAINT fk_Abonnement FOREIGN KEY (idClient) REFERENCES Client(idClient),
-  CONSTRAINT fk_Abonnement FOREIGN KEY (idVendeur) REFERENCES Vendeur(idVendeur)
+  CONSTRAINT fk_Abonnement_Client FOREIGN KEY (idClient) REFERENCES Client(idClient),
+  CONSTRAINT fk_Abonnement_Vendeur FOREIGN KEY (idVendeur) REFERENCES Vendeur(idVendeur)
 )
 
 CREATE TABLE produit(
@@ -189,8 +189,8 @@ CREATE TABLE vendre(
   idVendeur int NOT NULL,
   idproduit int NOT NULL,
   PRIMARY KEY(idVendeur, idproduit),
-  CONSTRAINT fk_vendre FOREIGN KEY (idVendeur) REFERENCES Vendeur(idVendeur),
-  CONSTRAINT fk_vendre FOREIGN KEY (idproduit) REFERENCES produit(idproduit)
+  CONSTRAINT fk_vendre_Vendeur FOREIGN KEY (idVendeur) REFERENCES Vendeur(idVendeur),
+  CONSTRAINT fk_vendre_produit FOREIGN KEY (idproduit) REFERENCES produit(idproduit)
 )
 
 CREATE TABLE payer(
@@ -199,16 +199,16 @@ CREATE TABLE payer(
   quantité int NOT NULL,
   PRIMARY KEY(idproduit, idClient),
   CONSTRAINT check_payer CHECK (quantité >0),
-  CONSTRAINT fk_payer FOREIGN KEY (idproduit) REFERENCES produit(idproduit),
-  CONSTRAINT fk_payer FOREIGN KEY (idClient) REFERENCES Client(idClient)
+  CONSTRAINT fk_payer_produit FOREIGN KEY (idproduit) REFERENCES produit(idproduit),
+  CONSTRAINT fk_payer_Client FOREIGN KEY (idClient) REFERENCES Client(idClient)
 )
 
 CREATE TABLE donne(
   idAbonnement int NOT NULL,
   idVendeur int NOT NULL,
   PRIMARY KEY(idAbonnement,idVendeur),
-  CONSTRAINT fk_donne FOREIGN KEY (idAbonnement) REFERENCES Abonnement(idAbonnement),
-  CONSTRAINT fk_donne FOREIGN KEY (idVendeur) REFERENCES Vendeur(idVendeur)
+  CONSTRAINT fk_donne_Abonnement FOREIGN KEY (idAbonnement) REFERENCES Abonnement(idAbonnement),
+  CONSTRAINT fk_donne_Vendeur FOREIGN KEY (idVendeur) REFERENCES Vendeur(idVendeur)
 )
 
 ---------------------------------------------------------------------------------------------
@@ -219,24 +219,24 @@ CREATE TABLE Noter(
   value int,
   PRIMARY KEY(idClient, codeFilm),
   CONSTRAINT check_value CHECK (value >=0 AND value <=5),
-  CONSTRAINT fk_Noter FOREIGN KEY (idClient) REFERENCES Client(idClient),
-  CONSTRAINT fk_Noter FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
+  CONSTRAINT fk_Noter_Client FOREIGN KEY (idClient) REFERENCES Client(idClient),
+  CONSTRAINT fk_Noter_Film FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
 )
 
 --INSERT ----------------------------------------------------------------------------------
 
 --Film--
 
-INSERT INTO Film (code, titre, dateSortie, ageLimit) VALUES (12341, 'Iron Man', '2008-05-02', 5);
-INSERT INTO Film (code, titre, dateSortie, ageLimit) VALUES (12342, 'The Incredible Hulk', '2008-06-13', 5);
-INSERT INTO Film (code, titre, dateSortie, ageLimit) VALUES (12343, 'Iron Man 2', '2010-05-07', 5);
-INSERT INTO Film (code, titre, dateSortie, ageLimit) VALUES (12344, 'The Conjuring', '2013-08-21', 13);
-INSERT INTO Film (code, titre, dateSortie, ageLimit) VALUES (12345, 'The Conjuring 2', '2016-06-29', 13);
-INSERT INTO Film (code, titre, dateSortie, ageLimit) VALUES (12346, 'Annabelle', '2014-10-08', 13);
-INSERT INTO Film (code, titre, dateSortie, ageLimit) VALUES (12347, 'Fifty Shades of Grey', '2015-02-11', 15);
-INSERT INTO Film (code, titre, dateSortie, ageLimit) VALUES (12348, 'Toy Story 4', '2019-06-26', 5);
-INSERT INTO Film (code, titre, dateSortie, ageLimit) VALUES (12349, 'Doraemon: Nobitas New Dinosaur', '2020-08-07', 5);
-INSERT INTO Film (code, titre, dateSortie, ageLimit) VALUES (12340, 'Avengers: Endgame', '2019-04-24', 5);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12341, 'Iron Man', '2008-05-02', 5);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12342, 'The Incredible Hulk', '2008-06-13', 5);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12343, 'Iron Man 2', '2010-05-07', 5);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12344, 'The Conjuring', '2013-08-21', 13);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12345, 'The Conjuring 2', '2016-06-29', 13);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12346, 'Annabelle', '2014-10-08', 13);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12347, 'Fifty Shades of Grey', '2015-02-11', 15);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12348, 'Toy Story 4', '2019-06-26', 5);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12349, 'Doraemon: Nobitas New Dinosaur', '2020-08-07', 5);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12340, 'Avengers: Endgame', '2019-04-24', 5);
 
 
 --Eléments liés au film part 1--
