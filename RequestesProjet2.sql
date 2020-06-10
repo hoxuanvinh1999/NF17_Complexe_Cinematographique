@@ -1,17 +1,5 @@
 --CREATE TABLE---------------------------------------------------------
 
-CREATE TABLE Seance (
-  codeSeance int PRIMARY KEY,
-  jour DATE NOT NULL,
-  heureDebut int NOT NULL,
-  duree int NOT NULL,
-  placeOccupees int NOT NULL,
-  placeVendues int NOT NULL,
-  CONSTRAINT check_heureDebut CHECK (heureDebut <= 2359 AND heureDebut>= 0),
-  CONSTRAINT check_duree CHECK (duree > 0),
-  CONSTRAINT check_placeOccupees CHECK (placeOccupees > 0),
-  CONSTRAINT check_Vendeur CHECK (placeVendues > 0)
-)
 
 CREATE TABLE Client(
   idClient int PRIMARY KEY,
@@ -86,6 +74,32 @@ CREATE TABLE comprises(
   CONSTRAINT fk_comprises_Film FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
 )
 
+--------------------------------------------------------------------------------------------------
+
+CREATE TABLE Projection(
+  idProjection int PRIMARY KEY,
+  codeFilm int NOT NULL,
+  doublage varchar NOT NULL,
+  CONSTRAINT fk_Projection FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm),
+  CONSTRAINT check_doublage CHECK (doublage IN ('VF', 'VOST'))
+)
+
+CREATE TABLE Seance (
+  codeSeance int NOT NULL,
+  jour DATE NOT NULL,
+  heureDebut int NOT NULL,
+  duree int NOT NULL,
+  placeOccupees int NOT NULL,
+  placeVendues int NOT NULL,
+  idProjection int NOT NULL,
+  PRIMARY KEY (codeSeance, idProjection),
+  CONSTRAINT check_heureDebut CHECK (heureDebut <= 2359 AND heureDebut>= 0),
+  CONSTRAINT check_duree CHECK (duree > 0),
+  CONSTRAINT check_placeOccupees CHECK (placeOccupees > 0),
+  CONSTRAINT check_Vendeur CHECK (placeVendues > 0),
+  CONSTRAINT fk_Seance FOREIGN KEY (idProjection) REFERENCES Projection(idProjection)
+)
+
 ------------------------------------------------------------------------------------------------------
 CREATE TABLE Salle(
   idSalle int PRIMARY KEY,
@@ -100,23 +114,6 @@ CREATE TABLE projetedans(
   PRIMARY KEY(idSalle,codeSeance),
   CONSTRAINT fk_projetedans_Salle FOREIGN KEY (idSalle) REFERENCES Salle(idSalle),
   CONSTRAINT fk_projetedans_Seance FOREIGN KEY (codeSeance) REFERENCES Seance(codeSeance)
-)
-
--------------------------------------------------------------------------------------------------------
-CREATE TABLE Projection(
-  idProjection int PRIMARY KEY,
-  codeFilm int NOT NULL,
-  doublage varchar NOT NULL,
-  CONSTRAINT fk_Projection FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm),
-  CONSTRAINT check_doublage CHECK (doublage IN ('VF', 'VOST'))
-)
-
-CREATE TABLE projecter(
-  codeSeance int NOT NULL,
-  idProjection int NOT NULL,
-  PRIMARY KEY(codeSeance, idProjection),
-  CONSTRAINT fk_projecter_Seance FOREIGN KEY (codeSeance) REFERENCES Seance(codeSeance),
-  CONSTRAINT fk_projecter_Projection FOREIGN KEY (idProjection) REFERENCES Projection(idProjection)
 )
 
 ------------------------------------------------------------------------------------------------
@@ -137,18 +134,19 @@ CREATE TABLE Entree(
   CONSTRAINT fk_Entree_Seance FOREIGN KEY (codeSeance) REFERENCES Seance(codeSeance)
 )
 
-CREATE TABLE ticketCatre(
+CREATE TABLE ticketCarte(
   codeticket int NOT NULL,
   PRIMARY KEY(codeticket),
-  CONSTRAINT fk_ticketCatre FOREIGN KEY (codeticket) REFERENCES Entree(codeticket)
+  CONSTRAINT fk_ticketCarte FOREIGN KEY (codeticket) REFERENCES Entree(codeticket)
 )
 
 CREATE TABLE ticketUnitaire(
   codeticket int NOT NULL,
   typeTarif varchar NOT NULL,
+  tarif int NOT NULL,
   PRIMARY KEY(codeticket),
   CONSTRAINT fk_ticketUnitaire FOREIGN KEY (codeticket) REFERENCES Entree(codeticket),
-  CONSTRAINT check_typeTarif CHECK (typeTarif IN ('Adulte','Etudiant','Enfant','Dimanche'))
+  CONSTRAINT check_typeTarif CHECK (typeTarif IN ('Adulte','Etudiant','Enfant','Dimanche')),
 )
 
 -----------------------------------------------------------------------------------------------------
@@ -223,20 +221,61 @@ CREATE TABLE Noter(
   CONSTRAINT fk_Noter_Film FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
 )
 
+
+----Gestion de droits-----------------------------------------------------------------------
+
+CREATE USER 'manager'@'Your IP' IDENTIFIED BY 'admin123';
+CREATE USER 'client'@'Your IP' IDENTIFIED BY 'abcdef123';
+CREATE USER 'employee'@'Your IP' IDENTIFIED BY 'qwerty123';
+
+GRANT ALL PRIVILEGES ON * . * TO 'manager'@'Your IP';
+
+GRANT SELECT ON Film TO 'client'@'Your IP';
+GRANT SELECT ON Distributeur TO 'client'@'Your IP';
+GRANT SELECT ON Realisateur TO 'client'@'Your IP';
+GRANT SELECT ON Producteur TO 'client'@'Your IP';
+GRANT SELECT ON Genre TO 'client'@'Your IP';
+GRANT SELECT ON Projection TO 'client'@'Your IP';
+GRANT SELECT ON Seance TO 'client'@'Your IP';
+GRANT SELECT ON Noter TO 'client'@'Your IP';
+GRANT SELECT ON vInformationsdefilm TO 'client'@'Your IP';
+GRANT SELECT ON vCatalogue 'client'@'Your IP';
+GRANT SELECT ON vNombreClientRegardantFilm TO 'client'@'Your IP';
+GRANT SELECT ON vHoraireDuFilmAvenue TO 'client'@'Your IP';
+GRANT SELECT ON vHoraireDuFilmAffiché TO 'client'@'Your IP';
+GRANT SELECT ON vTauxdeplace TO 'client'@'Your IP';
+GRANT SELECT ON vMoyenneduFilm TO 'client'@'Your IP';
+
+
+GRANT SELECT ON Vendeur TO 'employee'@'Your IP';
+GRANT SELECT ON Entree TO 'employee'@'Your IP';
+GRANT SELECT, INSERT, UPDATE ON Abonnement TO 'employee'@'Your IP';
+GRANT SELECT, INSERT, UPDATE ON vendre TO 'employee'@'Your IP';
+GRANT SELECT, INSERT, UPDATE ON payer TO 'employee'@'Your IP';
+GRANT SELECT, INSERT, UPDATE ON donne TO 'employee'@'Your IP';
+GRANT SELECT ON vListedeClients TO 'employee'@'Your IP';
+GRANT SELECT ON vClientsMembres TO 'employee'@'Your IP';
+GRANT SELECT ON vRevenu TO 'employee'@'Your IP';
+GRANT SELECT ON vDistributionTicket TO 'employee'@'Your IP';
+GRANT SELECT ON vTauxinscriptionmembres TO 'employee'@'Your IP';
+GRANT SELECT ON vRevenuDeFilm TO 'employee'@'Your IP';
+GRANT SELECT ON vRevenusdesproduits TO 'employee'@'Your IP';
+
+
 --INSERT ----------------------------------------------------------------------------------
 
 --Film--
 
-INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12341, 'Iron Man', '2008-05-02', 5);
-INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12342, 'The Incredible Hulk', '2008-06-13', 5);
-INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12343, 'Iron Man 2', '2010-05-07', 5);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12341, 'Iron Man', '2008-05-02',5);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12342, 'The Incredible Hulk', '2008-06-13',5);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12343, 'Iron Man 2', '2010-05-07',5);
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12344, 'The Conjuring', '2013-08-21', 13);
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12345, 'The Conjuring 2', '2016-06-29', 13);
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12346, 'Annabelle', '2014-10-08', 13);
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12347, 'Fifty Shades of Grey', '2015-02-11', 15);
-INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12348, 'Toy Story 4', '2019-06-26', 5);
-INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12349, 'Doraemon: Nobitas New Dinosaur', '2020-08-07', 5);
-INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12340, 'Avengers: Endgame', '2019-04-24', 5);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12348, 'Toy Story 4', '2019-06-26',5);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12349, 'Doraemon: Nobitas New Dinosaur', '2020-08-07',5);
+INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit) VALUES (12340, 'Avengers: Endgame', '2019-04-24',5);
 
 
 --Eléments liés au film part 1--
@@ -359,39 +398,7 @@ INSERT INTO Client(idClient, nom, prenom, dateNaissance) VALUES (22022,'Le','TuH
 INSERT INTO Client(idClient, nom, prenom, dateNaissance) VALUES (33033,'Hirasawa','Yui','1991-11-27');
 
 
----Seance--
-
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (10000,'2020-06-01',0800,85,10,2);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (20000,'2020-05-30',1000,95,10,1);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (30000,'2020-01-01',0800,115,10,2);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (40000,'2020-02-21',0800,120,10,3);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (50000,'2020-03-01',1600,180,10,4);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (60000,'2020-04-01',1000,120,10,10);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (70000,'2019-06-01',2300,120,10,6);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (80000,'2019-06-07',1400,95,10,2);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (90000,'2019-12-25',1600,115,10,5);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (11000,'2019-02-14',1700,115,10,5);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (12000,'2019-11-20',1400,115,10,3);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (13000,'2019-10-20',2300,95,10,7);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (14000,'2019-08-03',2100,85,10,3);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (15000,'2019-09-27',1700,85,10,9);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (16000,'2019-12-25',2100,120,10,5);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (17000,'2019-01-31',2300,115,10,8);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (18000,'2019-02-19',1400,120,10,9);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (19000,'2019-06-23',1400,95,10,1);
-INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues) VALUES (21000,'2019-03-08',1200,180,10,4);
-
-
---Salle--
-
-INSERT INTO Salle(idSalle, nombre, capacite) VALUES (100,'A100',100);
-INSERT INTO Salle(idSalle, nombre, capacite) VALUES (200,'A200',100);
-INSERT INTO Salle(idSalle, nombre, capacite) VALUES (300,'A300',50);
-INSERT INTO Salle(idSalle, nombre, capacite) VALUES (400,'B400',150);
-INSERT INTO Salle(idSalle, nombre, capacite) VALUES (500,'B500',200);
-
---Projection
-
+----Projection----
 INSERT INTO Projection(idProjection, codeFilm, doublage) VALUES (1,12341,'VF');
 INSERT INTO Projection(idProjection, codeFilm, doublage) VALUES (2,12341,'VOST');
 INSERT INTO Projection(idProjection, codeFilm, doublage) VALUES (3,12342,'VF');
@@ -408,6 +415,37 @@ INSERT INTO Projection(idProjection, codeFilm, doublage) VALUES (13,12349,'VF');
 INSERT INTO Projection(idProjection, codeFilm, doublage) VALUES (14,12340,'VF');
 INSERT INTO Projection(idProjection, codeFilm, doublage) VALUES (15,12340,'VOST');
 
+
+---Seance--
+
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (10000,'2020-06-01',0800,85,10,2,1);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (20000,'2020-05-30',1000,95,10,1,1);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (30000,'2020-01-01',0800,115,10,2,2);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (40000,'2020-02-21',0800,120,10,3,3);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (50000,'2020-03-01',1600,180,10,4,4);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (60000,'2020-04-01',1000,120,10,10,5);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (70000,'2019-06-01',2300,120,10,6,6);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (80000,'2019-06-07',1400,95,10,2,7);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (90000,'2019-12-25',1600,115,10,5,8);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (11000,'2019-02-14',1700,115,10,5,9);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (12000,'2019-11-20',1400,115,10,3,10);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (13000,'2019-10-20',2300,95,10,7,11);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (14000,'2019-08-03',2100,85,10,3,12);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (15000,'2019-09-27',1700,85,10,9,12);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (16000,'2019-12-25',2100,120,10,5,13);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (17000,'2019-01-31',2300,115,10,8,14);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (18000,'2019-02-19',1400,120,10,9,15);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (19000,'2019-06-23',1400,95,10,1,15);
+INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, idProjection) VALUES (21000,'2019-03-08',1200,180,10,4,15);
+
+
+--Salle--
+
+INSERT INTO Salle(idSalle, nombre, capacite) VALUES (100,'A100',100);
+INSERT INTO Salle(idSalle, nombre, capacite) VALUES (200,'A200',100);
+INSERT INTO Salle(idSalle, nombre, capacite) VALUES (300,'A300',50);
+INSERT INTO Salle(idSalle, nombre, capacite) VALUES (400,'B400',150);
+INSERT INTO Salle(idSalle, nombre, capacite) VALUES (500,'B500',200);
 
 INSERT INTO projetedans(idSalle, codeSeance) VALUES (100,10000);
 INSERT INTO projetedans(idSalle, codeSeance) VALUES (100,20000);
@@ -429,29 +467,8 @@ INSERT INTO projetedans(idSalle, codeSeance) VALUES (400,18000);
 INSERT INTO projetedans(idSalle, codeSeance) VALUES (200,19000);
 INSERT INTO projetedans(idSalle, codeSeance) VALUES (500,21000);
 
-INSERT INTO projecter(codeSeance, idProjection) VALUES (10000,1);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (20000,1);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (30000,2);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (40000,3);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (50000,4);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (60000,5);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (70000,6);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (80000,7);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (90000,8);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (11000,9);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (12000,10);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (13000,11);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (14000,12);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (15000,12);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (16000,13);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (17000,14);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (18000,15);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (19000,15);
-INSERT INTO projecter(codeSeance, idProjection) VALUES (21000,15);
-
 
 --Vendeur--
-
 
 INSERT INTO Vendeur(idVendeur, nom, prenom) VALUES (51,'Jamal','Forster');
 INSERT INTO Vendeur(idVendeur, nom, prenom) VALUES (52,'Rianne','Duggan');
@@ -461,9 +478,9 @@ INSERT INTO Vendeur(idVendeur, nom, prenom) VALUES (55,'Ahmad','Callum');
 
 --Abonnement et donne--
 
-INSERT INTO Abonnement(idAbonnement, idClient, idVendeur, placeEncore) VALUES (10801091, 11111, 51, 20);
-INSERT INTO Abonnement(idAbonnement, idClient, idVendeur, placeEncore) VALUES (10801092, 33033, 52, 30);
-INSERT INTO Abonnement(idAbonnement, idClient, idVendeur, placeEncore) VALUES (10801093, 22222, 55, 1);
+INSERT INTO Abonnement(idAbonnement, idClient, idVendeur, placeEncore) VALUES (10801091, 11111,51, 20);
+INSERT INTO Abonnement(idAbonnement, idClient, idVendeur, placeEncore) VALUES (10801092, 33033,52, 30);
+INSERT INTO Abonnement(idAbonnement, idClient, idVendeur, placeEncore) VALUES (10801093, 22222,55, 1);
 
 INSERT INTO donne(idAbonnement, idVendeur) VALUES (18001091,51);
 INSERT INTO donne(idAbonnement, idVendeur) VALUES (18001092,51);
@@ -584,94 +601,94 @@ INSERT INTO Entree(codeticket, idVendeur, idClient, codeSeance) VALUES (100088,5
 
 --typeEntree--
 
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100003,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100004,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100005,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100006,'Enfant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100007,'Enfant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100009,'Etudiant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100010,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100011,'Etudiant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100012,'Enfant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100015,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100016,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100017,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100018,'Enfant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100019,'Enfant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100020,'Enfant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100021,'Etudiant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100022,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100024,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100025,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100026,'Etudiant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100027,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100028,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100128,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100029,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100031,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100032,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100033,'Etudiant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100034,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100035,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100036,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100037,'Enfant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100038,'Etudiant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100039,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100041,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100044,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100045,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100046,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100048,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100051,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100052,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100054,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100055,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100056,'Etudiant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100057,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100058,'Etudiant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100059,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100060,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100063,'Enfant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100064,'Enfant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100065,'Enfant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100066,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100068,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100069,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100071,'Etudiant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100072,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100073,'Etudiant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100074,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100076,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100077,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100078,'Etudiant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100079,'Adulte');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100080,'Enfant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100081,'Enfant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100082,'Enfant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100085,'Etudiant');
-INSERT INTO ticketUnitaire(codeticket, typeTarif) VALUES(100087,'Adulte');
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100003,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100004,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100005,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100006,'Enfant',5);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100007,'Enfant',5);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100009,'Etudiant',8);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100010,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100011,'Etudiant',8);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100012,'Enfant',5);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100015,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100016,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100017,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100018,'Enfant',5);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100019,'Enfant',5);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100020,'Enfant',5);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100021,'Etudiant',8);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100022,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100024,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100025,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100026,'Etudiant',8);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100027,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100028,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100128,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100029,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100031,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100032,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100033,'Etudiant',8);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100034,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100035,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100036,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100037,'Enfant',5);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100038,'Etudiant',8);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100039,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100041,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100044,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100045,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100046,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100048,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100051,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100052,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100054,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100055,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100056,'Etudiant',8);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100057,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100058,'Etudiant',8);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100059,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100060,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100063,'Enfant',5);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100064,'Enfant',5);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100065,'Enfant',5);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100066,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100068,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100069,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100071,'Etudiant',8);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100072,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100073,'Etudiant',8);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100074,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100076,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100077,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100078,'Etudiant',8);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100079,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100080,'Enfant',5);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100081,'Enfant',5);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100082,'Enfant',5);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100085,'Etudiant',8);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100087,'Adulte',15);
 
-INSERT INTO ticketCatre(codeticket) VALUES (100001);
-INSERT INTO ticketCatre(codeticket) VALUES (100002);
-INSERT INTO ticketCatre(codeticket) VALUES (100008);
-INSERT INTO ticketCatre(codeticket) VALUES (100013);
-INSERT INTO ticketCatre(codeticket) VALUES (100014);
-INSERT INTO ticketCatre(codeticket) VALUES (100023);
-INSERT INTO ticketCatre(codeticket) VALUES (100030);
-INSERT INTO ticketCatre(codeticket) VALUES (100040);
-INSERT INTO ticketCatre(codeticket) VALUES (100042);
-INSERT INTO ticketCatre(codeticket) VALUES (100049);
-INSERT INTO ticketCatre(codeticket) VALUES (100047);
-INSERT INTO ticketCatre(codeticket) VALUES (100050);
-INSERT INTO ticketCatre(codeticket) VALUES (100053);
-INSERT INTO ticketCatre(codeticket) VALUES (100061);
-INSERT INTO ticketCatre(codeticket) VALUES (100062);
-INSERT INTO ticketCatre(codeticket) VALUES (100067);
-INSERT INTO ticketCatre(codeticket) VALUES (100070);
-INSERT INTO ticketCatre(codeticket) VALUES (100075);
-INSERT INTO ticketCatre(codeticket) VALUES (100083);
-INSERT INTO ticketCatre(codeticket) VALUES (100084);
-INSERT INTO ticketCatre(codeticket) VALUES (100088);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100001,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100002,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100008,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100013,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100014,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100023,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100030,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100040,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100042,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100049,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100047,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100050,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100053,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100061,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100062,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100067,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100070,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100075,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100083,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100084,10);
+INSERT INTO ticketCarte(codeticket, tarif) VALUES (100088,10);
 
 --Noter--
 
@@ -817,4 +834,116 @@ INSERT INTO payer(idproduit, idClient, quantité) VALUES(913006,33333,1);
 INSERT INTO payer(idproduit, idClient, quantité) VALUES(913006,77777,1);
 INSERT INTO payer(idproduit, idClient, quantité) VALUES(913006,33033,1);
 
------------------------------------------------------------------------------------
+--VUES------------------------------------------------------------------------------
+
+----Ressource abstraite et Heritage Ressource-----------------------------------------
+CREATE VIEW checkticket AS
+(SELECT codeticket FROM Entree INTERSECT SELECT codeticket FROM ticketCarte)
+UNION
+(SELECT codeticket FROM Entree INTERSECT SELECT codeticket FROM ticketUnitaire)
+
+CREATE VIEW checkEntree AS
+(SELECT codeticket FROM Entree INTERSECT SELECT codeticket FROM ticketCarte)
+INTERSECT
+(SELECT codeticket FROM Entree INTERSECT SELECT codeticket FROM ticketUnitaire)
+
+----liste de clients--------------------------------------------------------------------
+
+CREATE VIEW vListedeClients
+SELECT Client.nom, Client.prenom, Client.dateNaissance, Client.ageClient, Film.titre
+FROM Client, Film, Noter
+WHERE (Client.idClient = Noter.idClient) AND (Film.codeFilm = Noter.codeFilm)
+
+CREATE VIEW vClientsMembres
+SELECT Client.nom, Client.prenom, Client.dateNaissance, Client.ageClient, Abonnement.placeEncore
+FROM Client, Abonnement
+WHERE (Client.codeClient = Abonnement.codeClient)
+
+
+----Ventes et vente de billets-------------------------------------------------------------
+
+CREATE VIEW vRevenu AS
+SELECT COUNT(Entree.codeticket) , SUM(ticketCarte.tarif)+SUM(ticketUnitaire.tarif)
+FROM Entree, ticketUnitaire, ticketCarte
+
+
+CREATE VIEW vDistributionTicket AS
+(SELECT COUNT(ticketUnitaire.codeticket) FROM ticketUnitaire WHERE typeTarif='Adulte')
+UNION
+(SELECT COUNT(ticketUnitaire.codeticket) FROM ticketUnitaire WHERE typeTarif='Etudiant')
+UNION
+(SELECT COUNT(ticketUnitaire.codeticket) FROM ticketUnitaire WHERE typeTarif='Enfant')
+UNION
+(SELECT COUNT(ticketUnitaire.codeticket) FROM ticketUnitaire WHERE typeTarif='Dimanche')
+UNION
+(SELECT COUNT(ticketCarte.codeticket) FROM ticketCarte)
+
+
+CREATE VIEW vTauxinscriptionmembres AS
+SELECT COUNT(Client.codeClient), COUNT(Abonnement.idClient), COUNT(Client.codeClient)/COUNT(Abonnement.idClient)
+FROM Client, Abonnement
+
+-----Informations sur le film--------------------------------------------------------------
+
+CREATE VIEW vInformationsdefilm
+SELECT Film.titre, Film.dateSortie, Film.ageLimit, Distributeur.nom, Relisateur.Nom, Producteur.Nom, Genre.type
+FROM Film, Distributeur, Relisateur, Producteur, Genre, gérant, participé, comprises
+WHERE (Film.codeFilm = gérant.codeFilm) AND (gérant.idDistributeur = Distributeur.idDistributeur)
+  AND (Film.codeFilm = participé.codeFilm) AND (participé.idRealisateur = Relisateur.idRealisateur)
+  AND (Film.codeFilm = crée.codeFilm) AND (crée.idProducteur = Producteur.idProducteur)
+  AND (Film.codeFilm = comprises.codeFilm) AND (comprises.idGenre = Genre.idGenre)
+
+CREATE VIEW vCatalogue AS
+SELECT Genre.type, Film.titre
+FROM Genre, Film, comprises
+WHERE (Genre.idGenre = comprises.idGenre) AND (Film.codeFilm = comprises.codeFilm)
+
+
+CREATE VIEW vNombreClientRegardantFilm AS
+SELECT Film.titre, COUNT(Entree.idClient)
+FROM Film, Entree, Seance, Projection
+WHERE (Entree.codeSeance =  Seance.codeSeance) AND (Seance.idProjection = Projection.idProjection) AND (Projection.codeFilm=Film.codeFilm) ;
+
+
+CREATE VIEW vRevenuDeFilm AS
+SELECT Film.titre, SUM(ticketCarte.tarif)+SUM(ticketUnitaire.tarif)
+FROM Film, Entree, ticketCarte, ticketUnitaire, Projection, Seance
+WHERE (Film.codeFilm = Projection.codeFilm)
+  AND (Seance.idProjection = Projection.idProjection)
+  AND (Entree.codeSeance = Seance.codeSeance)
+  AND ((ticketCarte.codeticket = Entree.codeticket) OR (ticketUnitaire.codeticket = Entre.codeticket))
+
+
+CREATE VIEW vHoraireDuFilmAffiché AS
+SELECT Seance.jour, Seance.heureDebut, Film.titre, Film.ageLimit, Seance.placeOccupees, Seance.placeVendues, Seance.duree
+WHERE (Film.codeFilm = Projection.codeFilm)
+  AND (Projection.idProjection = Seance.idProjection)
+  AND (Seance.jour < GETDATE())
+
+CREATE VIEW vTauxdeplace AS
+SELECT Seance.jour, Seance.placeOccupees, Seance.placeVendues, Film.titre, Seance.placeVendues/Seance.placeOccupees
+FROM Seance, film, Projection
+WHERE (Seance.idProjection = Projection.idProjection)
+  AND (Projection.codeFilm = Film.codeFilm)
+
+CREATE VIEW vHoraireDuFilmAvenue AS
+SELECT Seance.jour, Seance.heureDebut, Film.titre, Film.ageLimit, Seance.placeOccupees, Seance.placeVendues, Seance.duree
+WHERE (Film.codeFilm = Projection.codeFilm)
+  AND (Projection.idProjection = Seance.idProjection)
+  AND (GETDATE() <= Seance.jour)
+
+CREATE VIEW vMoyenneduFilm AS
+SELECT Film.titre, SUM(Noter.value), SUM(Noter.Value)/SUM(Noter.idClient)
+FROM Film, Noter
+WHERE (Film.codeFilm = Noter.codeFilm)
+
+
+----vente de produits-------------------------------------------------------------------
+CREATE VIEW vRevenusdesproduits AS
+ (SELECT boisson.nomboisson, SUM(payer.quantité), SUM(payer.quantité*boisson.tarifboisson)
+        FROM boisson, payer
+        WHERE (boisson.idproduit=payer.idproduit))
+  UNION
+ (SELECT alimentaire,nomalimentaire, SUM(payer.quantité), SUM(payer.quantité*alimentaire.tarifalimentaire)
+        FROM alimentaire, payer
+        WHERE (alimentaire.idproduit=payer.idproduit))
