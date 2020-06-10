@@ -4,11 +4,19 @@ Relations:
 Film(#codeFilm: int, titre: varchar, dateSortie: date, ageLimit: int)
 avec titre, dateSortie, ageLimit NOT NULL
 avec ageLimit > 0
+    #codeFilm -> titre
+    #codeFilm -> dateSortie
+    #codeFilm -> ageLimit
+    titre -> dateSortie
+    titre ->ageLimit
+    titre_du_film(#codeFilm, titre)
+    information(#titre,dateSortie,ageLimit)
 
-Distributeur(#idDistributeur: int, nom: varchar) avec nom NOT NULL
-Relisateur(#idRealisateur: int, nom: varchar, prenom: varchar) avec nom, prenom NOT NULL
-Producteur(#idProducteur: int, nom: varchar,  prenom: varchar) avec nom, prenom NOT NULL
-Genre(#idGenre: int, type: varchar) avec type NOT NULL
+
+Distributeur(#idDistributeur: int, nom: varchar) avec nom NOT NULL      1NF
+Relisateur(#idRealisateur: int, nom: varchar, prenom: varchar) avec nom, prenom NOT NULL    1NF
+Producteur(#idProducteur: int, nom: varchar,  prenom: varchar) avec nom, prenom NOT NULL    1NF
+Genre(#idGenre: int, type: varchar) avec type NOT NULL    1NF
 
 gérant(#idDistributeur=>Distributeur(idDistributeur), #codeFilm=>Film(codeFilm))
 participé(#idRealisateur=>Relisateur(idRealisateur), #codeFilm=>Film(codeFilm))
@@ -18,14 +26,22 @@ comprises(#idGenre=>Genre(idGenre), #codeFilm=>Film(codeFilm))
 
 --Projection--
 Projection(#idProjection: int, #codeFilm=>Film(codeFilm), doublage : {VF, VOST}) avec doublage NOT NULL
+      #idProjection ->#codeFilm
+      #idProjection ->doublage
 
 Seance(#codeSeance: int, jour: date, heureDebut: int, duree: int, placeOccuppees: int, placeVendues: int, #idProjection=>Projection(idProjection))
 avec jour, heureDebut, duree, placeOccuppees, placeVendues, idProjection NOT NULL
 avec heureDebut <= 2359 AND heureDebut >= 0
+    #codeSeance -> jour
+    #codeSeance -> heureDebut
+    #codeSeance -> duree
+    #codeSeance -> placeOccupees
+    #codeSeance -> placeVendues
+    #codeSeance -> #idProjection // not sure about that yet
 
 Salle(#idSalle: int, nombre: varchar, capacite: int)
 avec nombre, capacite NOT NULL
-avec capacite > 0
+avec capacite > 0     1NF
 
 projetedans(#idSalle=>Salle(idSalle), #codeSeance=>Seance(codeSeance))
 
@@ -34,6 +50,10 @@ projetedans(#idSalle=>Salle(idSalle), #codeSeance=>Seance(codeSeance))
 Client(#idClient: int, nom: varchar, prenom: varchar, dateNaissance: date, ageClient: int)
 avec nom, prenom, dateNaissance, ageClient NOT NULL
 avec dateNaissance <= date_courant
+    #idClient -> nom
+    #idClient -> prenom
+    #idClient -> dateNaissance
+    #idClient -> ageClient
 
 Noter(#idClient=>Client(idClient), #codeFilm=>Film(codeFilm), value: int)
 avec value >= 0 AND value <= 5
@@ -41,7 +61,9 @@ avec value >= 0 AND value <= 5
 
 --Vendeur et Produit--
 Vendeur(#idVendeur: int, nom: varchar, prenom: varchar) avec nom, prenom NOT NULL
-
+    #idVendeur -> nom
+    #idVendeur -> prenom
+    
 Entree(#codeticket: int, #idVendeur=>Vendeur(idVendeur), #idClient=>Client(idClient), #codeSeance=>Seance(codeSeance))
 ticketCarte(#codeticket=>Entree, tarif:{10}) avec tarif NOT NULL
 ticketUnitaire(#codeticket=>Entree, typeTarif:{Adulte, Etudiant, Enfant, Dimanche}, tarif:{15,8,5,12}) avec typeTarif,tarif NOT NULL
