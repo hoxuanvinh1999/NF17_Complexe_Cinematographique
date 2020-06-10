@@ -1,21 +1,9 @@
 Relations:
 
-Seance(#codeSeance: int, jour: date, heureDebut: int, duree: int, placeOccuppees: int, placeVendues: int)
-avec jour, heureDebut, duree, placeOccuppees, placeVendues NOT NULL
-avec heureDebut <= 2359 AND heureDebut >= 0
-
-Salle(#idSalle: int, nombre: varchar, capacite: int)
-avec nombre, capacite NOT NULL
-avec capacite > 0
-
-projetedans(#idSalle=>Salle(idSalle), #codeSeance=>Seance(codeSeance))
-
+-----Film----
 Film(#codeFilm: int, titre: varchar, dateSortie: date, ageLimit: int)
 avec titre, dateSortie, ageLimit NOT NULL
 avec ageLimit > 0
-
-Projection(#idProjection: int, #codeFilm=>Film(codeFilm), doublage : {VF, VOST}) avec doublage NOT NULL
-projecter(#codeSeance=>Seance(codeSeance), #idProjection=>Projection(idProjection))
 
 Distributeur(#idDistributeur: int, nom: varchar) avec nom NOT NULL
 Relisateur(#idRealisateur: int, nom: varchar, prenom: varchar) avec nom, prenom NOT NULL
@@ -28,6 +16,21 @@ crée(#idProducteur=>Producteur(idProducteur), #codeFilm=>Film(codeFilm))
 comprises(#idGenre=>Genre(idGenre), #codeFilm=>Film(codeFilm))
 
 
+--Projection--
+Projection(#idProjection: int, #codeFilm=>Film(codeFilm), doublage : {VF, VOST}) avec doublage NOT NULL
+
+Seance(#codeSeance: int, jour: date, heureDebut: int, duree: int, placeOccuppees: int, placeVendues: int, #idProjection=>Projection(idProjection))
+avec jour, heureDebut, duree, placeOccuppees, placeVendues, idProjection NOT NULL
+avec heureDebut <= 2359 AND heureDebut >= 0
+
+Salle(#idSalle: int, nombre: varchar, capacite: int)
+avec nombre, capacite NOT NULL
+avec capacite > 0
+
+projetedans(#idSalle=>Salle(idSalle), #codeSeance=>Seance(codeSeance))
+
+
+--Client--
 Client(#idClient: int, nom: varchar, prenom: varchar, dateNaissance: date, ageClient: int)
 avec nom, prenom, dateNaissance, ageClient NOT NULL
 avec dateNaissance <= date_courant
@@ -35,12 +38,13 @@ avec dateNaissance <= date_courant
 Noter(#idClient=>Client(idClient), #codeFilm=>Film(codeFilm), value: int)
 avec value >= 0 AND value <= 5
 
+
+--Vendeur et Produit--
 Vendeur(#idVendeur: int, nom: varchar, prenom: varchar) avec nom, prenom NOT NULL
 
 Entree(#codeticket: int, #idVendeur=>Vendeur(idVendeur), #idClient=>Client(idClient), #codeSeance=>Seance(codeSeance))
-ticketCatre(#codeticket=>Entree)
-ticketUnitaire(#codeticket=>Entree, typeTarif:{Adulte, Etudiant, Enfant, Dimanche}) avec typeTarif NOT NULL
-
+ticketCarte(#codeticket=>Entree, tarif:{10}) avec tarif NOT NULL
+ticketUnitaire(#codeticket=>Entree, typeTarif:{Adulte, Etudiant, Enfant, Dimanche}, tarif:{15,8,5,12}) avec typeTarif,tarif NOT NULL
 
 Abonnement(#idAbonnement: int, #idClient=>Client(idClient), #idVendeur=>Vendeur(idVendeur), placeEncore: int) avec placeEncore >0
 
@@ -53,25 +57,99 @@ donne(#idAbonnement=>Abonnement(idAbonnement), idVendeur=>Vendeur(idVendeur))
 
 
 
-
 Vues :
 
-vTauxdeplace(codeSeance, jour, placeOccupees, placeVendues, codeFilm, taux)
-vNombreClientRegardantFilm(codeFilm, nombre_Client)
-vLaVenteTicket(nombre_ticket, argent_total)
-vEvaluePargenre(idGenre, nombre_films, notemoyenne, nombre_Client)
-vMoyenneduFilm(codeFilm, notemoyenne)
-vRevenusdesproduits(idproduit, quantité_total, argent_total)
-vTauxinscriptionmembres(total_Client, total_Abonnement, taux)
+vListedeClients(nom, prenom, dateNaissance, Age, films_regardés)
+    R1=Jointure(Client, Noter, Client.idClient = Noter.idClient)
+    R2=Jointure(R1, Film, R1.codeFilm = Film.codeFilm)
+    R3=Projection(R2, nom, prenom, dateNaissance, ageClient, titre)
+
+vClientsMembres(nom, prenom, dateNaissance, Age, place_Encore)
+    R1=Jointure(Client, Abonnement, Client.codeClient = Abonnement.codeClient)
+    R2=Projection(R1, nom, prenom, dateNaissance, Age, place_Encore)
+
+vRevenu(ticket_total, argent_total)
+
+vDistributionTicket(type_de_ticket, montant)
+    nombre_de_ligne(Projection(ticketUnitaire, codeticket, typeTarif='Adulte'))
+    nombre_de_ligne(Projection(ticketUnitaire, codeticket, typeTarif='Etudiant'))
+    nombre_de_ligne(Projection(ticketUnitaire, codeticket, typeTarif='Enfant'))
+    nombre_de_ligne(Projection(ticketUnitaire, codeticket, typeTarif='Dimanche'))
+    nombre_de_ligne(Projection(ticketCarte, codeticket,))
+
+vTauxinscriptionmembres(total_client, total_membre, raito)
+  nombre_de_ligne(Client)
+  nombre_de_ligne(Abonnement)
+
+vInformationsdefilm(titre, dateSortie, ageLimit, distributeur_nom, realisateur_nom, producteur_nom, type_du_film)
+  R1=Jointure(Film, gérant, Film.codeFilm = gérant.codeFilm)
+  R2=Jointure(R1, Distributeur, R1.idDistributeur=Distributeur.idDistributeur)
+    Ra=Projection(R2, titre, dateSortie, ageLimit, R2.Distributeur.Nom)
+  R3=Jointure(Film, participé, Film.codeFilm = participé.codeFilm)
+  R4=Jointure(R3, Relisateur, R3.idRealisateur=Realisateur.idRealisateur)
+    Rb=Projection(R4, titre, dateSortie, ageLimit, R4.Realisateur.Nom)
+  R5=Jointure(Film, crée, Film.codeFilm = crée.codeFilm)
+  R6=Jointure(R5, Producteur, R5.idProducteur = Producteur.idProducteur)
+    Rc=Projection(R6, titre, dateSortie, ageLimit, R6.Producteur.Nom)
+  R7=Jointure(Film, comprises, Film.codeFilm = comprises.codeFilm)
+  R8=Jointure(R7, Genre, R7.idGenre = Genre.idGenre)
+    Rd=Projection(R8, titre, dateSortie, ageLimit, R8.Genre.type)
+  R9=Union(Ra,Rb,Rc,Rd)
+
+vCatalogue(type_de_film, titre_du_film)
+  R1=Jointure(Film, comprises, Film.codeFilm = comprises.codeFilm)
+  R2=Jointure(R1, Genre, R1.idGenre = Genre.idGenre)
+  R3=Projection(R2, Genre.type, R1.Film.titre)
+
+vNombreClientRegardantFilm(titre_du_film, nombre_clients)
+  R1=Jointure(Entree, Seance, Entree.codeSeance =  Seance.codeSeance)
+  R2=Jointure(R1, Projection, R1.Seance.idProjection = Projection.idProjection)
+  R3=Jointure(R2, Film, R2.Projection.codeFilm=Film.codeFilm)
+  R4=Projection(R3.Film.titre, nombre_de_ligne(R3.idClient))
+
+vRevenuDeFilm(titre_du_film, argent_total)
+  R1=Jointure(Entree, Seance, Entree.codeSeance =  Seance.codeSeance)
+  R2=Jointure(R1, Projection, R1.Seance.idProjection = Projection.idProjection)
+  R3=Jointure(R2, Film, R2.Projection.codeFilm=Film.codeFilm)
+  R4=Union(Jointure(R3, ticketCarte, R3.Entree.codeticket=ticketCarte.codeticket) , Jointure(R3, ticketUnitaire, R3.Entree.codeticket=ticketUnitaire.codeticket))
+  Sum(R4.tarif)
+
+vHoraireDuFilmAffiché(jour, heureDebut, titre, ageLimit, placeOccupees, placeVendues, duree)
+  R1=Jointure(Film, Projection, Film.codeFilm = Projection.codeFilm)
+  R2=Jointure(R1, Seance, R1.idProjection = Seance.idProjection)
+  R3=Projection(R2, R2.Seance.jour, R2.Seance.heureDebut, R2.Film.titre, R2.Film.ageLimit, R2.Seance.placeOccupees, R2.Seance.placeVendues, R2.Seance.duree, R2.Seance.jour < GETDATE())
+
+vTauxdeplace(jour, placeOccupees, placeVendues, titre_du_film, Taux)
+  R1=Jointure(Seance, Projection, Seance.idProjection = Projection.idProjection)
+  R2=Jointure(R1, Film, R1.codeFilm = Film.codeFilm)
+  R3=Projection(R2, Seance.jour, Seance.placeOccupees, Seance.placeVendues, R1.Film.titre, Seance.placeVendues/Seance.placeOccupees)
+
+vHoraireDuFilmAvenue(jour, heureDebut, titre, ageLimit, placeOccupees, placeVendues, duree)
+  R1=Jointure(Film, Projection, Film.codeFilm = Projection.codeFilm)
+  R2=Jointure(R1, Seance, R1.idProjection = Seance.idProjection)
+  R3=Projection(R2, R2.Seance.jour, R2.Seance.heureDebut, R2.Film.titre, R2.Film.ageLimit, R2.Seance.placeOccupees, R2.Seance.placeVendues, R2.Seance.duree,  GETDATE() <= R2.Seance.jour)
+
+vMoyenneduFilm(titre_du_film, total_point, moyenne_point)
+  R1=Jointure(Film, Noter, Film.codeFilm = Noter.codeFilm)
+  total_point = SUM(Noter.value)
+  moyenne_point= SUM(Noter.Value)/SUM(Noter.idClient)
+
+vRevenusdesproduits(nom_du_produit, quantité, argent_total)
+  R1=Projection( Jointure(boisson, produit, boisson.idproduit=payer.idproduit), boisson.nomboisson)
+  SUM(payer.quantité)
+  SUM(payer.quantité*boisson.tarifboisson)
+  R2=Projection( Jointure(alimentaire, produit, alimentaire.idproduit=produit.idproduit), alimentaire,nomalimentaire)
+  SUM(payer.quantité)
+  SUM(payer.quantité*alimentaire.tarifalimentaire)
+  R3=Union(R1,R2)
 
 
-
-Contraintes complexes :
+Contraintes complexes:
 
 Conditions: Entree et 2 types de tickets
 
 R1=Projection(Entree,codeticket)
-R2=Intersection(R1, ticketCatre)
+R2=Intersection(R1, ticketCarte.codeticket)
 R3=Intersection(R1, ticketUnitaire.codeticket)
 R4=Intersection(R2, R3)
 R5=Union(R2, R3)
