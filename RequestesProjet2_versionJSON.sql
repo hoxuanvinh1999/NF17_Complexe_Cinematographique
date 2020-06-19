@@ -168,8 +168,8 @@ VALUES (
   '2008-05-02',
   5,
   '{"nom":"Paramount Pictures"}',
-  '{"nom":"Favreau","prenom":"Jon"}'
-  '{"nom":"Lee","prenom":"Stan"}'
+  '{"nom":"Favreau","prenom":"Jon"}',
+  '{"nom":"Lee","prenom":"Stan"}',
   '{"type1":"ficton","type2:"Super héros"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
@@ -179,8 +179,8 @@ VALUES (
   '2008-06-13',
   5,
   '{"nom":"Paramount Pictures"}',
-  '{"nom":"Leterrier","prenom":"Louis"}'
-  '{"nom":"Arad","prenom":"Avi"}'
+  '{"nom":"Leterrier","prenom":"Louis"}',
+  '{"nom":"Arad","prenom":"Avi"}',
   '{"type1":"ficton","type2:"Super héros"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
@@ -190,8 +190,8 @@ VALUES (
   '2010-05-07',
   5,
   '{"nom":"Paramount Pictures"}',
-  '{"nom":"Favreau","prenom":"Jon"}'
-  '{"nom":"Lee","prenom":"Stan"}'
+  '{"nom":"Favreau","prenom":"Jon"}',
+  '{"nom":"Lee","prenom":"Stan"}',
   '{"type1":"ficton","type2:"Super héros"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
@@ -200,8 +200,8 @@ VALUES (12344,
   '2013-08-21',
   13,
   '{"nom":"Warner Bros. Pictures"}',
-  '{"nom":"Wan","prenom":"James"}'
-  '{"nom":"Safran","prenom":"Peter"}'
+  '{"nom":"Wan","prenom":"James"}',
+  '{"nom":"Safran","prenom":"Peter"}',
   '{"type1":"ficton","type2:"horreur"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
@@ -211,8 +211,8 @@ VALUES (
   '2016-06-29',
   13,
   '{"nom":"Warner Bros. Pictures"}',
-  '{"nom":"Wan","prenom":"James"}'
-  '{"nom":"Cowan","prenom":"Rob"}'
+  '{"nom":"Wan","prenom":"James"}',
+  '{"nom":"Cowan","prenom":"Rob"}',
   '{"type1":"ficton","type2:"horreur"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
@@ -222,8 +222,8 @@ VALUES (
   '2014-10-08',
   13,
   '{"nom":"Warner Bros. Pictures"}',
-  '{"nom":"Leonetti","prenom":"John Robert"}'
-  '{"nom":"Cowan","prenom":"Rob"}'
+  '{"nom":"Leonetti","prenom":"John Robert"}',
+  '{"nom":"Cowan","prenom":"Rob"}',
   '{"type1":"ficton","type2:"horreur"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
@@ -233,8 +233,8 @@ VALUES (
   '2015-02-11',
   15,
   '{"nom":"Universal Pictures"}',
-  '{"nom":"Foley","prenom":"James"}'
-  '{"nom":"James","prenom":"E.L"}'
+  '{"nom":"Foley","prenom":"James"}',
+  '{"nom":"James","prenom":"E.L"}',
   '{"type1":"affection","type2:"dramatique"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
@@ -244,8 +244,8 @@ VALUES (
   '2019-06-26',
   5,
   '{"nom":"Walt Disney Studios Motion Pictures"}',
-  '{"nom":"Cooley","prenom":"Josh"}'
-  '{"nom":"Rivera","prenom":"Jonas"}'
+  '{"nom":"Cooley","prenom":"Josh"}',
+  '{"nom":"Rivera","prenom":"Jonas"}',
   '{"type1":"dessin animé","type2:"amusement"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
@@ -255,8 +255,8 @@ VALUES (
   '2020-08-07',
   5,
   '{"nom":"Toho Co. Ltd"}',
-  '{"nom":"Kazuaki","prenom":"Imai"}'
-  '{"nom":"Genki","prenom":"Kawamura"}'
+  '{"nom":"Kazuaki","prenom":"Imai"}',
+  '{"nom":"Genki","prenom":"Kawamura"}',
   '{"type1":"dessin animé","type2:"amusement"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
@@ -266,8 +266,8 @@ VALUES (
   '2019-04-24',
   5,
   '{"nom":"Paramount Pictures"}',
-  '{"nom":"Russo","prenom":"Joe"}'
-  '{"nom":"Tyler","prenom":"Liv"}'
+  '{"nom":"Russo","prenom":"Joe"}',
+  '{"nom":"Tyler","prenom":"Liv"}',
   '{"type1":"ficton","type2:"Super héros"}'
   ;
 );
