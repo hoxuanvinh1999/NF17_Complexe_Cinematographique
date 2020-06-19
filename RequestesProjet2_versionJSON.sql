@@ -368,7 +368,7 @@ VALUES (
   85,
   10,
   2,
-  '{"titre_du_film":"Iron Man","doublage":"VF"}'
+  '{"titre_du_film":"Iron Man","doublage":"VF"}',
   '{"nom_du_salle":"A100","capacite":"100"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -379,7 +379,7 @@ VALUES (
   95,
   10,
   1,
-  '{"titre_du_film":"Iron Man","doublage":"VF"}'
+  '{"titre_du_film":"Iron Man","doublage":"VF"}',
   '{"nom_du_salle":"A100","capacite":"100"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -390,7 +390,7 @@ VALUES (
   115,
   10,
   2,
-  '{"titre_du_film":"Iron Man","doublage":"VOST"}'
+  '{"titre_du_film":"Iron Man","doublage":"VOST"}',
   '{"nom_du_salle":"A200","capacite":"100"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -401,7 +401,7 @@ VALUES (
   120,
   10,
   3,
-  '{"titre_du_film":"The Incredible Hulk","doublage":"VF"}'
+  '{"titre_du_film":"The Incredible Hulk","doublage":"VF"}',
   '{"nom_du_salle":"A200","capacite":"100"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -412,7 +412,7 @@ VALUES (
   180,
   10,
   4,
-  '{"titre_du_film":"Iron Man 2","doublage":"VF"}'
+  '{"titre_du_film":"Iron Man 2","doublage":"VF"}',
   '{"nom_du_salle":"A300","capacite":"50"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -423,7 +423,7 @@ VALUES (
   120,
   10,
   10,
-  '{"titre_du_film":"Iron Man 2","doublage":"VOST"}'
+  '{"titre_du_film":"Iron Man 2","doublage":"VOST"}',
   '{"nom_du_salle":"B400","capacite":"150"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -434,7 +434,7 @@ VALUES (
   120,
   10,
   6,
-  '{"titre_du_film":"The Conjuring","doublage":"VOST"}'
+  '{"titre_du_film":"The Conjuring","doublage":"VOST"}',
   '{"nom_du_salle":"B400","capacite":"150"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -445,7 +445,7 @@ VALUES (
   95,
   10,
   2,
-  '{"titre_du_film":"The Conjuring 2","doublage":"VF"}'
+  '{"titre_du_film":"The Conjuring 2","doublage":"VF"}',
   '{"nom_du_salle":"B400","capacite":"150"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -455,7 +455,7 @@ VALUES (90000,
   115,
   10,
   5,
-  '{"titre_du_film":"Annabelle","doublage":"VF"}'
+  '{"titre_du_film":"Annabelle","doublage":"VF"}',
   '{"nom_du_salle":"B500","capacite":"200"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -466,7 +466,7 @@ VALUES (
   115,
   10,
   5,
-  '{"titre_du_film":"Annabelle","doublage":"VOST"}'
+  '{"titre_du_film":"Annabelle","doublage":"VOST"}',
   '{"nom_du_salle":"A100","capacite":"100"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -477,7 +477,7 @@ VALUES (
   115,
   10,
   3,
-  '{"titre_du_film":"Fifty Shades of Grey","doublage":"VF"}'
+  '{"titre_du_film":"Fifty Shades of Grey","doublage":"VF"}',
   '{"nom_du_salle":"B400","capacite":"150"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -488,7 +488,7 @@ VALUES (
   95,
   10,
   7,
-  '{"titre_du_film":"Fifty Shades of Grey","doublage":"VOST"}'
+  '{"titre_du_film":"Fifty Shades of Grey","doublage":"VOST"}',
   '{"nom_du_salle":"A200","capacite":"100"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -499,7 +499,7 @@ VALUES (
   85,
   10,
   3,
-  '{"titre_du_film":"Toy Story 4","doublage":"VF"}'
+  '{"titre_du_film":"Toy Story 4","doublage":"VF"}',
   '{"nom_du_salle":"B500","capacite":"200"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -510,7 +510,7 @@ VALUES (
   85,
   10,
   9,
-  '{"titre_du_film":"Toy Story 4","doublage":"VF"}'
+  '{"titre_du_film":"Toy Story 4","doublage":"VF"}',
   '{"nom_du_salle":"A100","capacite":"100"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -521,7 +521,7 @@ VALUES (
   120,
   10,
   5,
-  '{"titre_du_film":"Doraemon: Nobitas New Dinosaur","doublage":"VF"}'
+  '{"titre_du_film":"Doraemon: Nobitas New Dinosaur","doublage":"VF"}',
   '{"nom_du_salle":"A300","capacite":"50"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -532,7 +532,7 @@ VALUES (
   115,
   10,
   8,
-  '{"titre_du_film":"Avengers: Endgame","doublage":"VF"}'
+  '{"titre_du_film":"Avengers: Endgame","doublage":"VF"}',
   '{"nom_du_salle":"B500","capacite":"200"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -543,7 +543,7 @@ VALUES (
   120,
   10,
   9,
-  '{"titre_du_film":"Avengers: Endgame","doublage":"VOST"}'
+  '{"titre_du_film":"Avengers: Endgame","doublage":"VOST"}',
   '{"nom_du_salle":"B400","capacite":"150"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -554,7 +554,7 @@ VALUES (
   95,
   10,
   1,
-  '{"titre_du_film":"Avengers: Endgame","doublage":"VOST"}'
+  '{"titre_du_film":"Avengers: Endgame","doublage":"VOST"}',
   '{"nom_du_salle":"A200","capacite":"100"}'
 );
 INSERT INTO Seance(codeSeance, jour, heureDebut, duree, placeOccupees, placeVendues, détail, salle)
@@ -565,7 +565,7 @@ VALUES (
   180,
   10,
   4,
-  '{"titre_du_film":"Avengers: Endgame","doublage":"VOST"}'
+  '{"titre_du_film":"Avengers: Endgame","doublage":"VOST"}',
   '{"nom_du_salle":"B500","capacite":"200"}'
 );
 
@@ -1450,102 +1450,82 @@ INSERT INTO payer(idproduit, idClient, quantité) VALUES(913006,33333,1);
 INSERT INTO payer(idproduit, idClient, quantité) VALUES(913006,77777,1);
 INSERT INTO payer(idproduit, idClient, quantité) VALUES(913006,33033,1);
 
---VUES------------------------------------------------------------------------------
-
-----Ressource abstraite et Heritage Ressource-----------------------------------------
-CREATE VIEW checkticket AS
-(SELECT codeticket FROM Entree INTERSECT SELECT codeticket FROM ticketCarte)
-UNION
-(SELECT codeticket FROM Entree INTERSECT SELECT codeticket FROM ticketUnitaire)
-
-CREATE VIEW checkEntree AS
-(SELECT codeticket FROM Entree INTERSECT SELECT codeticket FROM ticketCarte)
-INTERSECT
-(SELECT codeticket FROM Entree INTERSECT SELECT codeticket FROM ticketUnitaire)
+--VUES avec JSON------------------------------------------------------------------------------
 
 ----liste de clients--------------------------------------------------------------------
 
 CREATE VIEW vListedeClients
-SELECT Client.nom, Client.prenom, Client.dateNaissance, Client.ageClient, Film.titre
+SELECT
+Client.nom,
+Client.prenom,
+Client.dateNaissance,
+Client.ageClient,
+Film.titre,
+Abonnement->>'Status' AS membre,
+Abonnement->>'placeEncore' AS place_Encore
 FROM Client, Film, Noter
 WHERE (Client.idClient = Noter.idClient) AND (Film.codeFilm = Noter.codeFilm)
-
-CREATE VIEW vClientsMembres
-SELECT Client.nom, Client.prenom, Client.dateNaissance, Client.ageClient, Abonnement.placeEncore
-FROM Client, Abonnement
-WHERE (Client.codeClient = Abonnement.codeClient)
 
 
 ----Ventes et vente de billets-------------------------------------------------------------
 
 CREATE VIEW vRevenu AS
-SELECT COUNT(Entree.codeticket) , SUM(ticketCarte.tarif)+SUM(ticketUnitaire.tarif)
-FROM Entree, ticketUnitaire, ticketCarte
+SELECT
+COUNT(codeticket),
+SUM(CAST(inforTicket->>'tarif' AS INTEGER)) AS total
+FROM Entree
 
-
-CREATE VIEW vDistributionTicket AS
-(SELECT COUNT(ticketUnitaire.codeticket) FROM ticketUnitaire WHERE typeTarif='Adulte')
-UNION
-(SELECT COUNT(ticketUnitaire.codeticket) FROM ticketUnitaire WHERE typeTarif='Etudiant')
-UNION
-(SELECT COUNT(ticketUnitaire.codeticket) FROM ticketUnitaire WHERE typeTarif='Enfant')
-UNION
-(SELECT COUNT(ticketUnitaire.codeticket) FROM ticketUnitaire WHERE typeTarif='Dimanche')
-UNION
-(SELECT COUNT(ticketCarte.codeticket) FROM ticketCarte)
-
-
-CREATE VIEW vTauxinscriptionmembres AS
-SELECT COUNT(Client.codeClient), COUNT(Abonnement.idClient), COUNT(Client.codeClient)/COUNT(Abonnement.idClient)
-FROM Client, Abonnement
 
 -----Informations sur le film--------------------------------------------------------------
 
 CREATE VIEW vInformationsdefilm
-SELECT Film.titre, Film.dateSortie, Film.ageLimit, Distributeur.nom, Relisateur.Nom, Producteur.Nom, Genre.type
-FROM Film, Distributeur, Relisateur, Producteur, Genre, gérant, participé, comprises
-WHERE (Film.codeFilm = gérant.codeFilm) AND (gérant.idDistributeur = Distributeur.idDistributeur)
-  AND (Film.codeFilm = participé.codeFilm) AND (participé.idRealisateur = Relisateur.idRealisateur)
-  AND (Film.codeFilm = crée.codeFilm) AND (crée.idProducteur = Producteur.idProducteur)
-  AND (Film.codeFilm = comprises.codeFilm) AND (comprises.idGenre = Genre.idGenre)
-
-CREATE VIEW vCatalogue AS
-SELECT Genre.type, Film.titre
-FROM Genre, Film, comprises
-WHERE (Genre.idGenre = comprises.idGenre) AND (Film.codeFilm = comprises.codeFilm)
-
-
-CREATE VIEW vNombreClientRegardantFilm AS
-SELECT Film.titre, COUNT(Entree.idClient)
-FROM Film, Entree, Seance, Projection
-WHERE (Entree.codeSeance =  Seance.codeSeance) AND (Seance.idProjection = Projection.idProjection) AND (Projection.codeFilm=Film.codeFilm) ;
+SELECT
+titre,
+dateSortie,
+ageLimit,
+Distributeur->>'nom' AS distributeur_nom,
+CONCAT(CAST(Realisateur->>'nom' AS VARCHAR) , CAST(Realisateur->>'preom' AS VARCHAR)) AS Realisateur,
+CONCAT(CAST(Producteur->>'nom' AS VARCHAR) , CAST(Producteur->>'preom' AS VARCHAR)) AS Producteur,
+CONCAT(CAST(Genre->>'type1' AS VARCHAR) , CAST(Genre->>'type2' AS VARCHAR)) AS Genre,
+FROM Film
 
 
 CREATE VIEW vRevenuDeFilm AS
-SELECT Film.titre, SUM(ticketCarte.tarif)+SUM(ticketUnitaire.tarif)
-FROM Film, Entree, ticketCarte, ticketUnitaire, Projection, Seance
-WHERE (Film.codeFilm = Projection.codeFilm)
-  AND (Seance.idProjection = Projection.idProjection)
+SELECT
+Film.titre,
+SUM(CAST(Entre.inforTicket->>'tarif' AS INTEGER)) AS Revenu
+FROM Film, Entree, Seance
+WHERE
+  (Film.titre = CAST(Seance.détail->>'titre_du_film' AS VARCHAR))
   AND (Entree.codeSeance = Seance.codeSeance)
-  AND ((ticketCarte.codeticket = Entree.codeticket) OR (ticketUnitaire.codeticket = Entre.codeticket))
 
 
 CREATE VIEW vHoraireDuFilmAffiché AS
-SELECT Seance.jour, Seance.heureDebut, Film.titre, Film.ageLimit, Seance.placeOccupees, Seance.placeVendues, Seance.duree
-WHERE (Film.codeFilm = Projection.codeFilm)
-  AND (Projection.idProjection = Seance.idProjection)
+SELECT
+Seance.jour,
+Seance.heureDebut,
+Film.titre,
+Film.ageLimit,
+Seance.placeOccupees,
+Seance.placeVendues,
+Seance.duree
+FROM Film, Seance
+WHERE
+  (Film.titre = CAST(Seance.détail->>'titre_du_film' AS VARCHAR))
   AND (Seance.jour < GETDATE())
 
-CREATE VIEW vTauxdeplace AS
-SELECT Seance.jour, Seance.placeOccupees, Seance.placeVendues, Film.titre, Seance.placeVendues/Seance.placeOccupees
-FROM Seance, film, Projection
-WHERE (Seance.idProjection = Projection.idProjection)
-  AND (Projection.codeFilm = Film.codeFilm)
-
 CREATE VIEW vHoraireDuFilmAvenue AS
-SELECT Seance.jour, Seance.heureDebut, Film.titre, Film.ageLimit, Seance.placeOccupees, Seance.placeVendues, Seance.duree
-WHERE (Film.codeFilm = Projection.codeFilm)
-  AND (Projection.idProjection = Seance.idProjection)
+SELECT
+Seance.jour,
+Seance.heureDebut,
+Film.titre,
+Film.ageLimit,
+Seance.placeOccupees,
+Seance.placeVendues,
+Seance.duree
+FROM Film, Seance
+WHERE
+  (Film.titre = CAST(Seance.détail->>'titre_du_film' AS VARCHAR))
   AND (GETDATE() <= Seance.jour)
 
 CREATE VIEW vMoyenneduFilm AS
