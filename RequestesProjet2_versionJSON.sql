@@ -1484,8 +1484,8 @@ titre,
 dateSortie,
 ageLimit,
 Distributeur->>'nom' AS distributeur_nom,
-CONCAT(CAST(Realisateur->>'nom' AS VARCHAR) , CAST(Realisateur->>'preom' AS VARCHAR)) AS Realisateur,
-CONCAT(CAST(Producteur->>'nom' AS VARCHAR) , CAST(Producteur->>'preom' AS VARCHAR)) AS Producteur,
+CONCAT(CAST(Realisateur->>'nom' AS VARCHAR) , CAST(Realisateur->>'prneom' AS VARCHAR)) AS Realisateur,
+CONCAT(CAST(Producteur->>'nom' AS VARCHAR) , CAST(Producteur->>'prenom' AS VARCHAR)) AS Producteur,
 CONCAT(CAST(Genre->>'type1' AS VARCHAR) , CAST(Genre->>'type2' AS VARCHAR)) AS Genre,
 FROM Film
 
