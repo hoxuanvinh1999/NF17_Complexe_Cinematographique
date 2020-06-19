@@ -906,6 +906,7 @@ WHERE (Film.codeFilm = Projection.codeFilm)
 
 CREATE VIEW vHoraireDuFilmAffiché AS
 SELECT Seance.jour, Seance.heureDebut, Film.titre, Film.ageLimit, Seance.placeOccupees, Seance.placeVendues, Seance.duree
+FROM Film, Seance, Projection
 WHERE (Film.codeFilm = Projection.codeFilm)
   AND (Projection.idProjection = Seance.idProjection)
   AND (Seance.jour < GETDATE())
@@ -918,6 +919,7 @@ WHERE (Seance.idProjection = Projection.idProjection)
 
 CREATE VIEW vHoraireDuFilmAvenue AS
 SELECT Seance.jour, Seance.heureDebut, Film.titre, Film.ageLimit, Seance.placeOccupees, Seance.placeVendues, Seance.duree
+FROM Film, Seance, Projection
 WHERE (Film.codeFilm = Projection.codeFilm)
   AND (Projection.idProjection = Seance.idProjection)
   AND (GETDATE() <= Seance.jour)
