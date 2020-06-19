@@ -37,7 +37,12 @@ avec heureDebut <= 2359 AND heureDebut >= 0
     #codeSeance -> duree
     #codeSeance -> placeOccupees
     #codeSeance -> placeVendues
-    #codeSeance -> #idProjection // not sure about that yet
+
+    En 3NF:
+    Seance_id(#codeSeance,#idProjection,#Salle)
+    Seance_détail(#codeSeance,jour,heureDebut,duree,placeEncore,placeVendues)
+    Projection(#idProjection,codeFilm,doublage)
+    Salle(#idSalle,nombre,capacite)
 
 Salle(#idSalle: int, nombre: varchar, capacite: int)
 avec nombre, capacite NOT NULL
@@ -47,7 +52,7 @@ projetedans(#idSalle=>Salle(idSalle), #codeSeance=>Seance(codeSeance))
 
 
 --Client--
-Client(#idClient: int, nom: varchar, prenom: varchar, dateNaissance: date, ageClient: int)
+Client(#idClient: int, nom: varchar, prenom: varchar, dateNaissance: date, ageClient: int) en 3NF
 avec nom, prenom, dateNaissance, ageClient NOT NULL
 avec dateNaissance <= date_courant
     #idClient -> nom
@@ -63,7 +68,7 @@ avec value >= 0 AND value <= 5
 Vendeur(#idVendeur: int, nom: varchar, prenom: varchar) avec nom, prenom NOT NULL
     #idVendeur -> nom
     #idVendeur -> prenom
-    
+
 Entree(#codeticket: int, #idVendeur=>Vendeur(idVendeur), #idClient=>Client(idClient), #codeSeance=>Seance(codeSeance))
 ticketCarte(#codeticket=>Entree, tarif:{10}) avec tarif NOT NULL
 ticketUnitaire(#codeticket=>Entree, typeTarif:{Adulte, Etudiant, Enfant, Dimanche}, tarif:{15,8,5,12}) avec typeTarif,tarif NOT NULL
