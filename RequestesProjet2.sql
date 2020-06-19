@@ -201,13 +201,6 @@ CREATE TABLE payer(
   CONSTRAINT fk_payer_Client FOREIGN KEY (idClient) REFERENCES Client(idClient)
 )
 
-CREATE TABLE donne(
-  idAbonnement int NOT NULL,
-  idVendeur int NOT NULL,
-  PRIMARY KEY(idAbonnement,idVendeur),
-  CONSTRAINT fk_donne_Abonnement FOREIGN KEY (idAbonnement) REFERENCES Abonnement(idAbonnement),
-  CONSTRAINT fk_donne_Vendeur FOREIGN KEY (idVendeur) REFERENCES Vendeur(idVendeur)
-)
 
 ---------------------------------------------------------------------------------------------
 
@@ -252,7 +245,6 @@ GRANT SELECT ON Entree TO 'employee'@'Your IP';
 GRANT SELECT, INSERT, UPDATE ON Abonnement TO 'employee'@'Your IP';
 GRANT SELECT, INSERT, UPDATE ON vendre TO 'employee'@'Your IP';
 GRANT SELECT, INSERT, UPDATE ON payer TO 'employee'@'Your IP';
-GRANT SELECT, INSERT, UPDATE ON donne TO 'employee'@'Your IP';
 GRANT SELECT ON vListedeClients TO 'employee'@'Your IP';
 GRANT SELECT ON vClientsMembres TO 'employee'@'Your IP';
 GRANT SELECT ON vRevenu TO 'employee'@'Your IP';
@@ -480,11 +472,7 @@ INSERT INTO Vendeur(idVendeur, nom, prenom) VALUES (55,'Ahmad','Callum');
 
 INSERT INTO Abonnement(idAbonnement, idClient, idVendeur, placeEncore) VALUES (10801091, 11111,51, 20);
 INSERT INTO Abonnement(idAbonnement, idClient, idVendeur, placeEncore) VALUES (10801092, 33033,52, 30);
-INSERT INTO Abonnement(idAbonnement, idClient, idVendeur, placeEncore) VALUES (10801093, 22222,55, 1);
-
-INSERT INTO donne(idAbonnement, idVendeur) VALUES (18001091,51);
-INSERT INTO donne(idAbonnement, idVendeur) VALUES (18001092,51);
-INSERT INTO donne(idAbonnement, idVendeur) VALUES (18001093,53);
+INSERT INTO Abonnement(idAbonnement, idClient, idVendeur, placeEncore) VALUES (10801093, 22222,53, 1);
 
 --Entree--
 
@@ -635,6 +623,7 @@ INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100037,'Enfant',
 INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100038,'Etudiant',8);
 INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100039,'Adulte',15);
 INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100041,'Adulte',15);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100043,'Adulte',15);
 INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100044,'Adulte',15);
 INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100045,'Adulte',15);
 INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100046,'Adulte',15);
@@ -666,6 +655,7 @@ INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100080,'Enfant',
 INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100081,'Enfant',5);
 INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100082,'Enfant',5);
 INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100085,'Etudiant',8);
+INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100086,'Adulte',15);
 INSERT INTO ticketUnitaire(codeticket, typeTarif, tarif) VALUES(100087,'Adulte',15);
 
 INSERT INTO ticketCarte(codeticket, tarif) VALUES (100001,10);
