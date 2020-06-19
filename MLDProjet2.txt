@@ -18,10 +18,10 @@ Relisateur(#idRealisateur: int, nom: varchar, prenom: varchar) avec nom, prenom 
 Producteur(#idProducteur: int, nom: varchar,  prenom: varchar) avec nom, prenom NOT NULL    1NF
 Genre(#idGenre: int, type: varchar) avec type NOT NULL    1NF
 
-gérant(#idDistributeur=>Distributeur(idDistributeur), #codeFilm=>Film(codeFilm))
-participé(#idRealisateur=>Relisateur(idRealisateur), #codeFilm=>Film(codeFilm))
-crée(#idProducteur=>Producteur(idProducteur), #codeFilm=>Film(codeFilm))
-comprises(#idGenre=>Genre(idGenre), #codeFilm=>Film(codeFilm))
+gérant(#idDistributeur=>Distributeur(idDistributeur), #codeFilm=>Film(codeFilm)) 1NF
+participé(#idRealisateur=>Relisateur(idRealisateur), #codeFilm=>Film(codeFilm)) 1NF
+crée(#idProducteur=>Producteur(idProducteur), #codeFilm=>Film(codeFilm)) 1NF
+comprises(#idGenre=>Genre(idGenre), #codeFilm=>Film(codeFilm)) 1NF
 
 
 --Projection--
