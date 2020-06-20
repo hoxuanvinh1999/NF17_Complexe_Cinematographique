@@ -1,46 +1,43 @@
 --CREATE TABLE---------------------------------------------------------
 
-
 CREATE TABLE Client(
   idClient int PRIMARY KEY,
   nom varchar NOT NULL,
   prenom varchar NOT NULL,
   dateNaissance DATE NOT NULL,
-  ageClient AS DATEDIFF(year, dateNaissance, GETDATE()),
-  CONSTRAINT check_dateNaissance CHECK (dateNaissance <= GETDATE())
-)
+  CONSTRAINT check_dateNaissance CHECK (dateNaissance <= current_date)
+);
 
 CREATE TABLE Film(
   codeFilm int PRIMARY KEY,
   titre varchar NOT NULL,
   dateSortie DATE NOT NULL,
   ageLimit int NOT NULL,
-  CONSTRAINT check_dateSortie CHECK (dateSortie <= GETDATE()),
   CONSTRAINT check_ageLimit CHECK (ageLimit > 0)
-)
+);
 
 ----------------------------------------------------------------------------------------------------
 CREATE TABLE Distributeur(
   idDistributeur int PRIMARY KEY,
   nom varchar NOT NULL
-)
+);
 
-CREATE TABLE Relisateur(
+CREATE TABLE Realisateur(
   idRealisateur int PRIMARY KEY,
   nom varchar NOT NULL,
   prenom varchar NOT NULL
-)
+);
 
 CREATE TABLE Producteur(
   idProducteur int PRIMARY KEY,
   nom varchar NOT NULL,
   prenom varchar NOT NULL
-)
+);
 
 CREATE TABLE Genre(
   idGenre int PRIMARY KEY,
   type varchar NOT NULL
-)
+);
 
 CREATE TABLE gérant(
   idDistributeur int NOT NULL,
@@ -48,15 +45,15 @@ CREATE TABLE gérant(
   PRIMARY KEY(idDistributeur, codeFilm),
   CONSTRAINT fk_gérant_distributeur FOREIGN KEY (idDistributeur) REFERENCES Distributeur(idDistributeur),
   CONSTRAINT fk_gérant_film FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
-)
+);
 
 CREATE TABLE participé(
   idRealisateur int NOT NULL,
   codeFilm int NOT NULL,
   PRIMARY KEY(idRealisateur, codeFilm),
-  CONSTRAINT fk_participé_Realisateur FOREIGN KEY (idRealisateur) REFERENCES Relisateur(idRealisateur),
+  CONSTRAINT fk_participé_Realisateur FOREIGN KEY (idRealisateur) REFERENCES realisateur(idRealisateur),
   CONSTRAINT fk_participé_Film FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
-)
+);
 
 CREATE TABLE crée(
   idProducteur int NOT NULL,
@@ -64,7 +61,7 @@ CREATE TABLE crée(
   PRIMARY KEY(idProducteur, codeFilm),
   CONSTRAINT fk_crée_Producteur FOREIGN KEY (idProducteur) REFERENCES Producteur(idProducteur),
   CONSTRAINT fk_crée_Film FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
-)
+);
 
 CREATE TABLE comprises(
   idGenre int NOT NULL,
@@ -72,7 +69,7 @@ CREATE TABLE comprises(
   PRIMARY KEY(idGenre, codeFilm),
   CONSTRAINT fk_comprises_Genre FOREIGN KEY (idGenre) REFERENCES Genre(idGenre),
   CONSTRAINT fk_comprises_Film FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
-)
+);
 
 --------------------------------------------------------------------------------------------------
 
@@ -82,10 +79,10 @@ CREATE TABLE Projection(
   doublage varchar NOT NULL,
   CONSTRAINT fk_Projection FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm),
   CONSTRAINT check_doublage CHECK (doublage IN ('VF', 'VOST'))
-)
+);
 
 CREATE TABLE Seance (
-  codeSeance int NOT NULL,
+  codeSeance int UNIQUE NOT NULL,
   jour DATE NOT NULL,
   heureDebut int NOT NULL,
   duree int NOT NULL,
@@ -98,7 +95,7 @@ CREATE TABLE Seance (
   CONSTRAINT check_placeOccupees CHECK (placeOccupees > 0),
   CONSTRAINT check_Vendeur CHECK (placeVendues > 0),
   CONSTRAINT fk_Seance FOREIGN KEY (idProjection) REFERENCES Projection(idProjection)
-)
+);
 
 ------------------------------------------------------------------------------------------------------
 CREATE TABLE Salle(
@@ -106,7 +103,7 @@ CREATE TABLE Salle(
   nombre varchar NOT NULL,
   capacite int NOT NULL,
   CONSTRAINT check_capacite CHECK (capacite > 0)
-)
+);
 
 CREATE TABLE projetedans(
   idSalle int NOT NULL,
@@ -114,31 +111,32 @@ CREATE TABLE projetedans(
   PRIMARY KEY(idSalle,codeSeance),
   CONSTRAINT fk_projetedans_Salle FOREIGN KEY (idSalle) REFERENCES Salle(idSalle),
   CONSTRAINT fk_projetedans_Seance FOREIGN KEY (codeSeance) REFERENCES Seance(codeSeance)
-)
+);
 
 ------------------------------------------------------------------------------------------------
 CREATE TABLE Vendeur(
   idVendeur int PRIMARY KEY,
   nom varchar NOT NULL,
   prenom varchar NOT NULL
-)
+);
 
 --------------------------------------------------------------------------------------------
 CREATE TABLE Entree(
-  #codeticket int PRIMARY KEY,
+  codeticket int PRIMARY KEY,
   idVendeur int NOT NULL,
   idClient int NOT NULL,
   codeSeance int NOT NULL,
   CONSTRAINT fk_Entree_Vendeur FOREIGN KEY (idVendeur) REFERENCES Vendeur(idVendeur),
   CONSTRAINT fk_Entree_Client FOREIGN KEY (idClient) REFERENCES Client(idClient),
   CONSTRAINT fk_Entree_Seance FOREIGN KEY (codeSeance) REFERENCES Seance(codeSeance)
-)
+);
 
 CREATE TABLE ticketCarte(
   codeticket int NOT NULL,
+  tarif INT NOT NULL,
   PRIMARY KEY(codeticket),
   CONSTRAINT fk_ticketCarte FOREIGN KEY (codeticket) REFERENCES Entree(codeticket)
-)
+);
 
 CREATE TABLE ticketUnitaire(
   codeticket int NOT NULL,
@@ -146,8 +144,8 @@ CREATE TABLE ticketUnitaire(
   tarif int NOT NULL,
   PRIMARY KEY(codeticket),
   CONSTRAINT fk_ticketUnitaire FOREIGN KEY (codeticket) REFERENCES Entree(codeticket),
-  CONSTRAINT check_typeTarif CHECK (typeTarif IN ('Adulte','Etudiant','Enfant','Dimanche')),
-)
+  CONSTRAINT check_typeTarif CHECK (typeTarif IN ('Adulte','Etudiant','Enfant','Dimanche'))
+);
 
 -----------------------------------------------------------------------------------------------------
 CREATE TABLE Abonnement(
@@ -158,11 +156,11 @@ CREATE TABLE Abonnement(
   CONSTRAINT check_placeEncore CHECK (placeEncore > 0),
   CONSTRAINT fk_Abonnement_Client FOREIGN KEY (idClient) REFERENCES Client(idClient),
   CONSTRAINT fk_Abonnement_Vendeur FOREIGN KEY (idVendeur) REFERENCES Vendeur(idVendeur)
-)
+);
 
 CREATE TABLE produit(
   idproduit int PRIMARY KEY
-)
+);
 
 CREATE TABLE boisson(
   idproduit int NOT NULL,
@@ -171,7 +169,7 @@ CREATE TABLE boisson(
   PRIMARY KEY(idproduit),
   CONSTRAINT check_tarifboisson CHECK (tarifboisson >0),
   CONSTRAINT fk_boisson FOREIGN KEY (idproduit) REFERENCES produit(idproduit)
-)
+);
 
 CREATE TABLE alimentaire(
   idproduit int NOT NULL,
@@ -180,7 +178,7 @@ CREATE TABLE alimentaire(
   PRIMARY KEY(idproduit),
   CONSTRAINT check_tarifalimentaire CHECK (tarifalimentaire > 0),
   CONSTRAINT fk_alimentaire FOREIGN KEY (idproduit) REFERENCES produit(idproduit)
-)
+);
 
 --------------------------------------------------------------------------------------------------
 CREATE TABLE vendre(
@@ -189,7 +187,7 @@ CREATE TABLE vendre(
   PRIMARY KEY(idVendeur, idproduit),
   CONSTRAINT fk_vendre_Vendeur FOREIGN KEY (idVendeur) REFERENCES Vendeur(idVendeur),
   CONSTRAINT fk_vendre_produit FOREIGN KEY (idproduit) REFERENCES produit(idproduit)
-)
+);
 
 CREATE TABLE payer(
   idproduit int NOT NULL,
@@ -199,7 +197,7 @@ CREATE TABLE payer(
   CONSTRAINT check_payer CHECK (quantité >0),
   CONSTRAINT fk_payer_produit FOREIGN KEY (idproduit) REFERENCES produit(idproduit),
   CONSTRAINT fk_payer_Client FOREIGN KEY (idClient) REFERENCES Client(idClient)
-)
+);
 
 
 ---------------------------------------------------------------------------------------------
@@ -212,8 +210,7 @@ CREATE TABLE Noter(
   CONSTRAINT check_value CHECK (value >=0 AND value <=5),
   CONSTRAINT fk_Noter_Client FOREIGN KEY (idClient) REFERENCES Client(idClient),
   CONSTRAINT fk_Noter_Film FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
-)
-
+);
 
 ----Gestion de droits-----------------------------------------------------------------------
 
@@ -722,8 +719,6 @@ INSERT INTO Noter(idClient,codeFilm, value) VALUES (55555,12347,2);
 INSERT INTO Noter(idClient,codeFilm, value) VALUES (55555,12340,3);
 
 INSERT INTO Noter(idClient,codeFilm, value) VALUES (66666,12343,4);
-INSERT INTO Noter(idClient,codeFilm, value) VALUES (66666,12343,2);
-INSERT INTO Noter(idClient,codeFilm, value) VALUES (66666,12343,4);
 
 INSERT INTO Noter(idClient,codeFilm, value) VALUES (77777,12342,3);
 INSERT INTO Noter(idClient,codeFilm, value) VALUES (77777,12343,5);
@@ -824,37 +819,44 @@ INSERT INTO payer(idproduit, idClient, quantité) VALUES(913006,33333,1);
 INSERT INTO payer(idproduit, idClient, quantité) VALUES(913006,77777,1);
 INSERT INTO payer(idproduit, idClient, quantité) VALUES(913006,33033,1);
 
+
 --VUES------------------------------------------------------------------------------
 
 ----Ressource abstraite et Heritage Ressource-----------------------------------------
 CREATE VIEW checkticket AS
 (SELECT codeticket FROM Entree INTERSECT SELECT codeticket FROM ticketCarte)
 UNION
-(SELECT codeticket FROM Entree INTERSECT SELECT codeticket FROM ticketUnitaire)
+(SELECT codeticket FROM Entree INTERSECT SELECT codeticket FROM ticketUnitaire);
 
 CREATE VIEW checkEntree AS
 (SELECT codeticket FROM Entree INTERSECT SELECT codeticket FROM ticketCarte)
 INTERSECT
-(SELECT codeticket FROM Entree INTERSECT SELECT codeticket FROM ticketUnitaire)
+(SELECT codeticket FROM Entree INTERSECT SELECT codeticket FROM ticketUnitaire);
 
 ----liste de clients--------------------------------------------------------------------
 
-CREATE VIEW vListedeClients
-SELECT Client.nom, Client.prenom, Client.dateNaissance, Client.ageClient, Film.titre
+CREATE VIEW vListedeClients AS
+SELECT Client.nom, Client.prenom, Client.dateNaissance, Film.titre AS FilmRegarde
 FROM Client, Film, Noter
-WHERE (Client.idClient = Noter.idClient) AND (Film.codeFilm = Noter.codeFilm)
+WHERE (Client.idClient = Noter.idClient) AND (Film.codeFilm = Noter.codeFilm);
 
-CREATE VIEW vClientsMembres
-SELECT Client.nom, Client.prenom, Client.dateNaissance, Client.ageClient, Abonnement.placeEncore
+CREATE VIEW vClientsMembres AS
+SELECT Client.nom, Client.prenom, Client.dateNaissance, Abonnement.placeEncore
 FROM Client, Abonnement
-WHERE (Client.codeClient = Abonnement.codeClient)
+WHERE (Client.idClient = Abonnement.idClient);
 
 
 ----Ventes et vente de billets-------------------------------------------------------------
 
 CREATE VIEW vRevenu AS
-SELECT COUNT(Entree.codeticket) , SUM(ticketCarte.tarif)+SUM(ticketUnitaire.tarif)
-FROM Entree, ticketUnitaire, ticketCarte
+SELECT Sum(revenu) as RevenuTotale from ((SELECT SUM(ticketUnitaire.tarif) AS revenu
+FROM ticketUnitaire)
+UNION
+(SELECT SUM(ticketCarte.tarif) AS revenu
+FROM ticketCarte)) AS detail;
+
+
+
 
 
 CREATE VIEW vDistributionTicket AS
@@ -866,42 +868,52 @@ UNION
 UNION
 (SELECT COUNT(ticketUnitaire.codeticket) FROM ticketUnitaire WHERE typeTarif='Dimanche')
 UNION
-(SELECT COUNT(ticketCarte.codeticket) FROM ticketCarte)
+(SELECT COUNT(ticketCarte.codeticket) FROM ticketCarte);
 
-
-CREATE VIEW vTauxinscriptionmembres AS
-SELECT COUNT(Client.codeClient), COUNT(Abonnement.idClient), COUNT(Client.codeClient)/COUNT(Abonnement.idClient)
-FROM Client, Abonnement
 
 -----Informations sur le film--------------------------------------------------------------
 
-CREATE VIEW vInformationsdefilm
-SELECT Film.titre, Film.dateSortie, Film.ageLimit, Distributeur.nom, Relisateur.Nom, Producteur.Nom, Genre.type
-FROM Film, Distributeur, Relisateur, Producteur, Genre, gérant, participé, comprises
+CREATE VIEW vInformationsdefilm AS
+SELECT Film.titre, Film.dateSortie, Film.ageLimit, Distributeur.nom AS Distributeur_Nom, realisateur.nom AS Realisateur_Nom, Producteur.nom AS Producteur_Nom, Genre.type
+FROM Film, Distributeur, realisateur, Producteur, Genre, gérant, participé, comprises, crée
 WHERE (Film.codeFilm = gérant.codeFilm) AND (gérant.idDistributeur = Distributeur.idDistributeur)
-  AND (Film.codeFilm = participé.codeFilm) AND (participé.idRealisateur = Relisateur.idRealisateur)
+  AND (Film.codeFilm = participé.codeFilm) AND (participé.idRealisateur = realisateur.idRealisateur)
   AND (Film.codeFilm = crée.codeFilm) AND (crée.idProducteur = Producteur.idProducteur)
-  AND (Film.codeFilm = comprises.codeFilm) AND (comprises.idGenre = Genre.idGenre)
+  AND (Film.codeFilm = comprises.codeFilm) AND (comprises.idGenre = Genre.idGenre);
+
 
 CREATE VIEW vCatalogue AS
 SELECT Genre.type, Film.titre
 FROM Genre, Film, comprises
-WHERE (Genre.idGenre = comprises.idGenre) AND (Film.codeFilm = comprises.codeFilm)
+WHERE (Genre.idGenre = comprises.idGenre) AND (Film.codeFilm = comprises.codeFilm);
 
 
 CREATE VIEW vNombreClientRegardantFilm AS
 SELECT Film.titre, COUNT(Entree.idClient)
 FROM Film, Entree, Seance, Projection
-WHERE (Entree.codeSeance =  Seance.codeSeance) AND (Seance.idProjection = Projection.idProjection) AND (Projection.codeFilm=Film.codeFilm) ;
+WHERE (Entree.codeSeance =  Seance.codeSeance)
+  AND (Seance.idProjection = Projection.idProjection)
+  AND (Projection.codeFilm=Film.codeFilm)
+GROUP BY Film.codeFilm;
 
 
 CREATE VIEW vRevenuDeFilm AS
-SELECT Film.titre, SUM(ticketCarte.tarif)+SUM(ticketUnitaire.tarif)
-FROM Film, Entree, ticketCarte, ticketUnitaire, Projection, Seance
+SELECT titre, SUM(revenu) AS Revenu FROM
+((SELECT Film.codeFilm, Film.titre, SUM(ticketCarte.tarif) AS revenu
+FROM Film, Entree, ticketCarte, Projection, Seance
 WHERE (Film.codeFilm = Projection.codeFilm)
   AND (Seance.idProjection = Projection.idProjection)
   AND (Entree.codeSeance = Seance.codeSeance)
-  AND ((ticketCarte.codeticket = Entree.codeticket) OR (ticketUnitaire.codeticket = Entre.codeticket))
+  AND ((ticketCarte.codeticket = Entree.codeticket))
+GROUP BY film.codeFilm)
+UNION
+(SELECT Film.codeFilm, Film.titre, SUM(ticketUnitaire.tarif) AS revenu
+FROM Film, Entree, ticketUnitaire, Projection, Seance
+WHERE (Film.codeFilm = Projection.codeFilm)
+  AND (Seance.idProjection = Projection.idProjection)
+  AND (Entree.codeSeance = Seance.codeSeance)
+  AND ((ticketUnitaire.codeticket = Entree.codeticket))
+GROUP BY film.codeFilm)) AS detailtable GROUP BY codeFilm, titre;
 
 
 CREATE VIEW vHoraireDuFilmAffiché AS
@@ -909,33 +921,37 @@ SELECT Seance.jour, Seance.heureDebut, Film.titre, Film.ageLimit, Seance.placeOc
 FROM Film, Seance, Projection
 WHERE (Film.codeFilm = Projection.codeFilm)
   AND (Projection.idProjection = Seance.idProjection)
-  AND (Seance.jour < GETDATE())
+  AND (Seance.jour < current_date);
 
 CREATE VIEW vTauxdeplace AS
-SELECT Seance.jour, Seance.placeOccupees, Seance.placeVendues, Film.titre, Seance.placeVendues/Seance.placeOccupees
+SELECT Seance.jour, Seance.placeOccupees, Seance.placeVendues, Film.titre, ROUND(Seance.placeVendues*1.0/Seance.placeOccupees, 2) As Taux
 FROM Seance, film, Projection
 WHERE (Seance.idProjection = Projection.idProjection)
-  AND (Projection.codeFilm = Film.codeFilm)
+  AND (Projection.codeFilm = Film.codeFilm);
 
 CREATE VIEW vHoraireDuFilmAvenue AS
 SELECT Seance.jour, Seance.heureDebut, Film.titre, Film.ageLimit, Seance.placeOccupees, Seance.placeVendues, Seance.duree
 FROM Film, Seance, Projection
 WHERE (Film.codeFilm = Projection.codeFilm)
   AND (Projection.idProjection = Seance.idProjection)
-  AND (GETDATE() <= Seance.jour)
+  AND (current_date <= Seance.jour);
+
 
 CREATE VIEW vMoyenneduFilm AS
-SELECT Film.titre, SUM(Noter.value), SUM(Noter.Value)/SUM(Noter.idClient)
-FROM Film, Noter
-WHERE (Film.codeFilm = Noter.codeFilm)
+  SELECT Film.titre, ROUND(SUM(Noter.Value)*1.0/COUNT(Noter.idClient), 2) AS NoteMoyenne
+  FROM Film, Noter
+  WHERE (Film.codeFilm = Noter.codeFilm)
+  GROUP BY Film.codeFilm;
 
 
 ----vente de produits-------------------------------------------------------------------
 CREATE VIEW vRevenusdesproduits AS
- (SELECT boisson.nomboisson, SUM(payer.quantité), SUM(payer.quantité*boisson.tarifboisson)
+ (SELECT boisson.nomboisson AS nomproduits, SUM(payer.quantité) AS Quantite, SUM(payer.quantité*boisson.tarifboisson) AS Revenu
         FROM boisson, payer
-        WHERE (boisson.idproduit=payer.idproduit))
+        WHERE (boisson.idproduit=payer.idproduit)
+        GROUP BY boisson.idproduit)
   UNION
- (SELECT alimentaire,nomalimentaire, SUM(payer.quantité), SUM(payer.quantité*alimentaire.tarifalimentaire)
+ (SELECT alimentaire.nomalimentaire AS nomproduits, SUM(payer.quantité) AS Quantite, SUM(payer.quantité*alimentaire.tarifalimentaire) AS Revenu
         FROM alimentaire, payer
-        WHERE (alimentaire.idproduit=payer.idproduit))
+        WHERE (alimentaire.idproduit=payer.idproduit)
+        GROUP BY alimentaire.idproduit);
