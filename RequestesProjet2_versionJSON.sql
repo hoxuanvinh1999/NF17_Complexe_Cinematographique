@@ -118,41 +118,41 @@ CREATE TABLE Noter(
 
 ----Gestion de droits-----------------------------------------------------------------------
 
--- CREATE USER 'manager'@'Your IP' IDENTIFIED BY 'admin123';
--- CREATE USER 'client'@'Your IP' IDENTIFIED BY 'abcdef123';
--- CREATE USER 'employee'@'Your IP' IDENTIFIED BY 'qwerty123';
---
--- GRANT ALL PRIVILEGES ON * . * TO 'manager'@'Your IP';
---
--- GRANT SELECT ON Film TO 'client'@'Your IP';
--- GRANT SELECT ON Distributeur TO 'client'@'Your IP';
--- GRANT SELECT ON Realisateur TO 'client'@'Your IP';
--- GRANT SELECT ON Producteur TO 'client'@'Your IP';
--- GRANT SELECT ON Genre TO 'client'@'Your IP';
--- GRANT SELECT ON Projection TO 'client'@'Your IP';
--- GRANT SELECT ON Seance TO 'client'@'Your IP';
--- GRANT SELECT ON Noter TO 'client'@'Your IP';
--- GRANT SELECT ON vInformationsdefilm TO 'client'@'Your IP';
--- GRANT SELECT ON vCatalogue 'client'@'Your IP';
--- GRANT SELECT ON vNombreClientRegardantFilm TO 'client'@'Your IP';
--- GRANT SELECT ON vHoraireDuFilmAvenue TO 'client'@'Your IP';
--- GRANT SELECT ON vHoraireDuFilmAffiché TO 'client'@'Your IP';
--- GRANT SELECT ON vTauxdeplace TO 'client'@'Your IP';
--- GRANT SELECT ON vMoyenneduFilm TO 'client'@'Your IP';
---
---
--- GRANT SELECT ON Vendeur TO 'employee'@'Your IP';
--- GRANT SELECT ON Entree TO 'employee'@'Your IP';
--- GRANT SELECT, INSERT, UPDATE ON Abonnement TO 'employee'@'Your IP';
--- GRANT SELECT, INSERT, UPDATE ON vendre TO 'employee'@'Your IP';
--- GRANT SELECT, INSERT, UPDATE ON payer TO 'employee'@'Your IP';
--- GRANT SELECT ON vListedeClients TO 'employee'@'Your IP';
--- GRANT SELECT ON vClientsMembres TO 'employee'@'Your IP';
--- GRANT SELECT ON vRevenu TO 'employee'@'Your IP';
--- GRANT SELECT ON vDistributionTicket TO 'employee'@'Your IP';
--- GRANT SELECT ON vTauxinscriptionmembres TO 'employee'@'Your IP';
--- GRANT SELECT ON vRevenuDeFilm TO 'employee'@'Your IP';
--- GRANT SELECT ON vRevenusdesproduits TO 'employee'@'Your IP';
+CREATE USER 'manager'@'Your IP' IDENTIFIED BY 'admin123';
+CREATE USER 'client'@'Your IP' IDENTIFIED BY 'abcdef123';
+CREATE USER 'employee'@'Your IP' IDENTIFIED BY 'qwerty123';
+
+GRANT ALL PRIVILEGES ON * . * TO 'manager'@'Your IP';
+
+GRANT SELECT ON Film TO 'client'@'Your IP';
+GRANT SELECT ON Distributeur TO 'client'@'Your IP';
+GRANT SELECT ON Realisateur TO 'client'@'Your IP';
+GRANT SELECT ON Producteur TO 'client'@'Your IP';
+GRANT SELECT ON Genre TO 'client'@'Your IP';
+GRANT SELECT ON Projection TO 'client'@'Your IP';
+GRANT SELECT ON Seance TO 'client'@'Your IP';
+GRANT SELECT ON Noter TO 'client'@'Your IP';
+GRANT SELECT ON vInformationsdefilm TO 'client'@'Your IP';
+GRANT SELECT ON vCatalogue 'client'@'Your IP';
+GRANT SELECT ON vNombreClientRegardantFilm TO 'client'@'Your IP';
+GRANT SELECT ON vHoraireDuFilmAvenue TO 'client'@'Your IP';
+GRANT SELECT ON vHoraireDuFilmAffiché TO 'client'@'Your IP';
+GRANT SELECT ON vTauxdeplace TO 'client'@'Your IP';
+GRANT SELECT ON vMoyenneduFilm TO 'client'@'Your IP';
+
+
+GRANT SELECT ON Vendeur TO 'employee'@'Your IP';
+GRANT SELECT ON Entree TO 'employee'@'Your IP';
+GRANT SELECT, INSERT, UPDATE ON Abonnement TO 'employee'@'Your IP';
+GRANT SELECT, INSERT, UPDATE ON vendre TO 'employee'@'Your IP';
+GRANT SELECT, INSERT, UPDATE ON payer TO 'employee'@'Your IP';
+GRANT SELECT ON vListedeClients TO 'employee'@'Your IP';
+GRANT SELECT ON vClientsMembres TO 'employee'@'Your IP';
+GRANT SELECT ON vRevenu TO 'employee'@'Your IP';
+GRANT SELECT ON vDistributionTicket TO 'employee'@'Your IP';
+GRANT SELECT ON vTauxinscriptionmembres TO 'employee'@'Your IP';
+GRANT SELECT ON vRevenuDeFilm TO 'employee'@'Your IP';
+GRANT SELECT ON vRevenusdesproduits TO 'employee'@'Your IP';
 
 
 --INSERT ----------------------------------------------------------------------------------
