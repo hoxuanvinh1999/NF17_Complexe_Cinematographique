@@ -6,10 +6,9 @@ CREATE TABLE Client(
   nom varchar NOT NULL,
   prenom varchar NOT NULL,
   dateNaissance DATE NOT NULL,
-  ageClient AS DATEDIFF(year, dateNaissance, GETDATE()),
   Abonnement JSON NOT NULL,
-  CONSTRAINT check_dateNaissance CHECK (dateNaissance <= GETDATE())
-)
+  CONSTRAINT check_dateNaissance CHECK (dateNaissance <= current_date)
+);
 
 CREATE TABLE Film(
   codeFilm int PRIMARY KEY,
@@ -20,15 +19,14 @@ CREATE TABLE Film(
   Realisateur JSON NOT NULL,
   Producteur JSON NOT NULL,
   Genre JSON NOT NULL,
-  CONSTRAINT check_dateSortie CHECK (dateSortie <= GETDATE()),
   CONSTRAINT check_ageLimit CHECK (ageLimit > 0)
-)
+);
 
 
 --------------------------------------------------------------------------------------------------
 
 CREATE TABLE Seance (
-  codeSeance int NOT NULL,
+  codeSeance int UNIQUE NOT NULL,
   jour DATE NOT NULL,
   heureDebut int NOT NULL,
   duree int NOT NULL,
@@ -39,19 +37,19 @@ CREATE TABLE Seance (
   CONSTRAINT check_heureDebut CHECK (heureDebut <= 2359 AND heureDebut>= 0),
   CONSTRAINT check_duree CHECK (duree > 0),
   CONSTRAINT check_placeOccupees CHECK (placeOccupees > 0),
-  CONSTRAINT check_Vendeur CHECK (placeVendues > 0),
-)
+  CONSTRAINT check_Vendeur CHECK (placeVendues > 0)
+);
 
 ------------------------------------------------------------------------------------------------
 CREATE TABLE Vendeur(
   idVendeur int PRIMARY KEY,
   nom varchar NOT NULL,
   prenom varchar NOT NULL
-)
+);
 
 --------------------------------------------------------------------------------------------
 CREATE TABLE Entree(
-  #codeticket int PRIMARY KEY,
+  codeticket int PRIMARY KEY,
   idVendeur int NOT NULL,
   idClient int NOT NULL,
   codeSeance int NOT NULL,
@@ -59,13 +57,13 @@ CREATE TABLE Entree(
   CONSTRAINT fk_Entree_Vendeur FOREIGN KEY (idVendeur) REFERENCES Vendeur(idVendeur),
   CONSTRAINT fk_Entree_Client FOREIGN KEY (idClient) REFERENCES Client(idClient),
   CONSTRAINT fk_Entree_Seance FOREIGN KEY (codeSeance) REFERENCES Seance(codeSeance)
-)
+);
 
 -----------------------------------------------------------------------------------------------------
 
 CREATE TABLE produit(
   idproduit int PRIMARY KEY
-)
+);
 
 CREATE TABLE boisson(
   idproduit int NOT NULL,
@@ -74,7 +72,7 @@ CREATE TABLE boisson(
   PRIMARY KEY(idproduit),
   CONSTRAINT check_tarifboisson CHECK (tarifboisson >0),
   CONSTRAINT fk_boisson FOREIGN KEY (idproduit) REFERENCES produit(idproduit)
-)
+);
 
 CREATE TABLE alimentaire(
   idproduit int NOT NULL,
@@ -83,7 +81,7 @@ CREATE TABLE alimentaire(
   PRIMARY KEY(idproduit),
   CONSTRAINT check_tarifalimentaire CHECK (tarifalimentaire > 0),
   CONSTRAINT fk_alimentaire FOREIGN KEY (idproduit) REFERENCES produit(idproduit)
-)
+);
 
 --------------------------------------------------------------------------------------------------
 CREATE TABLE vendre(
@@ -92,7 +90,7 @@ CREATE TABLE vendre(
   PRIMARY KEY(idVendeur, idproduit),
   CONSTRAINT fk_vendre_Vendeur FOREIGN KEY (idVendeur) REFERENCES Vendeur(idVendeur),
   CONSTRAINT fk_vendre_produit FOREIGN KEY (idproduit) REFERENCES produit(idproduit)
-)
+);
 
 CREATE TABLE payer(
   idproduit int NOT NULL,
@@ -102,7 +100,7 @@ CREATE TABLE payer(
   CONSTRAINT check_payer CHECK (quantité >0),
   CONSTRAINT fk_payer_produit FOREIGN KEY (idproduit) REFERENCES produit(idproduit),
   CONSTRAINT fk_payer_Client FOREIGN KEY (idClient) REFERENCES Client(idClient)
-)
+);
 
 
 ---------------------------------------------------------------------------------------------
@@ -115,46 +113,46 @@ CREATE TABLE Noter(
   CONSTRAINT check_value CHECK (value >=0 AND value <=5),
   CONSTRAINT fk_Noter_Client FOREIGN KEY (idClient) REFERENCES Client(idClient),
   CONSTRAINT fk_Noter_Film FOREIGN KEY (codeFilm) REFERENCES Film(codeFilm)
-)
+);
 
 
 ----Gestion de droits-----------------------------------------------------------------------
 
-CREATE USER 'manager'@'Your IP' IDENTIFIED BY 'admin123';
-CREATE USER 'client'@'Your IP' IDENTIFIED BY 'abcdef123';
-CREATE USER 'employee'@'Your IP' IDENTIFIED BY 'qwerty123';
-
-GRANT ALL PRIVILEGES ON * . * TO 'manager'@'Your IP';
-
-GRANT SELECT ON Film TO 'client'@'Your IP';
-GRANT SELECT ON Distributeur TO 'client'@'Your IP';
-GRANT SELECT ON Realisateur TO 'client'@'Your IP';
-GRANT SELECT ON Producteur TO 'client'@'Your IP';
-GRANT SELECT ON Genre TO 'client'@'Your IP';
-GRANT SELECT ON Projection TO 'client'@'Your IP';
-GRANT SELECT ON Seance TO 'client'@'Your IP';
-GRANT SELECT ON Noter TO 'client'@'Your IP';
-GRANT SELECT ON vInformationsdefilm TO 'client'@'Your IP';
-GRANT SELECT ON vCatalogue 'client'@'Your IP';
-GRANT SELECT ON vNombreClientRegardantFilm TO 'client'@'Your IP';
-GRANT SELECT ON vHoraireDuFilmAvenue TO 'client'@'Your IP';
-GRANT SELECT ON vHoraireDuFilmAffiché TO 'client'@'Your IP';
-GRANT SELECT ON vTauxdeplace TO 'client'@'Your IP';
-GRANT SELECT ON vMoyenneduFilm TO 'client'@'Your IP';
-
-
-GRANT SELECT ON Vendeur TO 'employee'@'Your IP';
-GRANT SELECT ON Entree TO 'employee'@'Your IP';
-GRANT SELECT, INSERT, UPDATE ON Abonnement TO 'employee'@'Your IP';
-GRANT SELECT, INSERT, UPDATE ON vendre TO 'employee'@'Your IP';
-GRANT SELECT, INSERT, UPDATE ON payer TO 'employee'@'Your IP';
-GRANT SELECT ON vListedeClients TO 'employee'@'Your IP';
-GRANT SELECT ON vClientsMembres TO 'employee'@'Your IP';
-GRANT SELECT ON vRevenu TO 'employee'@'Your IP';
-GRANT SELECT ON vDistributionTicket TO 'employee'@'Your IP';
-GRANT SELECT ON vTauxinscriptionmembres TO 'employee'@'Your IP';
-GRANT SELECT ON vRevenuDeFilm TO 'employee'@'Your IP';
-GRANT SELECT ON vRevenusdesproduits TO 'employee'@'Your IP';
+-- CREATE USER 'manager'@'Your IP' IDENTIFIED BY 'admin123';
+-- CREATE USER 'client'@'Your IP' IDENTIFIED BY 'abcdef123';
+-- CREATE USER 'employee'@'Your IP' IDENTIFIED BY 'qwerty123';
+--
+-- GRANT ALL PRIVILEGES ON * . * TO 'manager'@'Your IP';
+--
+-- GRANT SELECT ON Film TO 'client'@'Your IP';
+-- GRANT SELECT ON Distributeur TO 'client'@'Your IP';
+-- GRANT SELECT ON Realisateur TO 'client'@'Your IP';
+-- GRANT SELECT ON Producteur TO 'client'@'Your IP';
+-- GRANT SELECT ON Genre TO 'client'@'Your IP';
+-- GRANT SELECT ON Projection TO 'client'@'Your IP';
+-- GRANT SELECT ON Seance TO 'client'@'Your IP';
+-- GRANT SELECT ON Noter TO 'client'@'Your IP';
+-- GRANT SELECT ON vInformationsdefilm TO 'client'@'Your IP';
+-- GRANT SELECT ON vCatalogue 'client'@'Your IP';
+-- GRANT SELECT ON vNombreClientRegardantFilm TO 'client'@'Your IP';
+-- GRANT SELECT ON vHoraireDuFilmAvenue TO 'client'@'Your IP';
+-- GRANT SELECT ON vHoraireDuFilmAffiché TO 'client'@'Your IP';
+-- GRANT SELECT ON vTauxdeplace TO 'client'@'Your IP';
+-- GRANT SELECT ON vMoyenneduFilm TO 'client'@'Your IP';
+--
+--
+-- GRANT SELECT ON Vendeur TO 'employee'@'Your IP';
+-- GRANT SELECT ON Entree TO 'employee'@'Your IP';
+-- GRANT SELECT, INSERT, UPDATE ON Abonnement TO 'employee'@'Your IP';
+-- GRANT SELECT, INSERT, UPDATE ON vendre TO 'employee'@'Your IP';
+-- GRANT SELECT, INSERT, UPDATE ON payer TO 'employee'@'Your IP';
+-- GRANT SELECT ON vListedeClients TO 'employee'@'Your IP';
+-- GRANT SELECT ON vClientsMembres TO 'employee'@'Your IP';
+-- GRANT SELECT ON vRevenu TO 'employee'@'Your IP';
+-- GRANT SELECT ON vDistributionTicket TO 'employee'@'Your IP';
+-- GRANT SELECT ON vTauxinscriptionmembres TO 'employee'@'Your IP';
+-- GRANT SELECT ON vRevenuDeFilm TO 'employee'@'Your IP';
+-- GRANT SELECT ON vRevenusdesproduits TO 'employee'@'Your IP';
 
 
 --INSERT ----------------------------------------------------------------------------------
@@ -170,7 +168,7 @@ VALUES (
   '{"nom":"Paramount Pictures"}',
   '{"nom":"Favreau","prenom":"Jon"}',
   '{"nom":"Lee","prenom":"Stan"}',
-  '{"type1":"ficton","type2:"Super héros"}'
+  '{"type1":"ficton","type2":"Super héros"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
 VALUES (
@@ -181,7 +179,7 @@ VALUES (
   '{"nom":"Paramount Pictures"}',
   '{"nom":"Leterrier","prenom":"Louis"}',
   '{"nom":"Arad","prenom":"Avi"}',
-  '{"type1":"ficton","type2:"Super héros"}'
+  '{"type1":"ficton","type2":"Super héros"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
 VALUES (
@@ -192,7 +190,7 @@ VALUES (
   '{"nom":"Paramount Pictures"}',
   '{"nom":"Favreau","prenom":"Jon"}',
   '{"nom":"Lee","prenom":"Stan"}',
-  '{"type1":"ficton","type2:"Super héros"}'
+  '{"type1":"ficton","type2":"Super héros"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
 VALUES (12344,
@@ -202,7 +200,7 @@ VALUES (12344,
   '{"nom":"Warner Bros. Pictures"}',
   '{"nom":"Wan","prenom":"James"}',
   '{"nom":"Safran","prenom":"Peter"}',
-  '{"type1":"ficton","type2:"horreur"}'
+  '{"type1":"ficton","type2":"horreur"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
 VALUES (
@@ -213,7 +211,7 @@ VALUES (
   '{"nom":"Warner Bros. Pictures"}',
   '{"nom":"Wan","prenom":"James"}',
   '{"nom":"Cowan","prenom":"Rob"}',
-  '{"type1":"ficton","type2:"horreur"}'
+  '{"type1":"ficton","type2":"horreur"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
 VALUES (
@@ -224,7 +222,7 @@ VALUES (
   '{"nom":"Warner Bros. Pictures"}',
   '{"nom":"Leonetti","prenom":"John Robert"}',
   '{"nom":"Cowan","prenom":"Rob"}',
-  '{"type1":"ficton","type2:"horreur"}'
+  '{"type1":"ficton","type2":"horreur"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
 VALUES (
@@ -235,7 +233,7 @@ VALUES (
   '{"nom":"Universal Pictures"}',
   '{"nom":"Foley","prenom":"James"}',
   '{"nom":"James","prenom":"E.L"}',
-  '{"type1":"affection","type2:"dramatique"}'
+  '{"type1":"affection","type2":"dramatique"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
 VALUES (
@@ -246,7 +244,7 @@ VALUES (
   '{"nom":"Walt Disney Studios Motion Pictures"}',
   '{"nom":"Cooley","prenom":"Josh"}',
   '{"nom":"Rivera","prenom":"Jonas"}',
-  '{"type1":"dessin animé","type2:"amusement"}'
+  '{"type1":"dessin animé","type2":"amusement"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
 VALUES (
@@ -257,7 +255,7 @@ VALUES (
   '{"nom":"Toho Co. Ltd"}',
   '{"nom":"Kazuaki","prenom":"Imai"}',
   '{"nom":"Genki","prenom":"Kawamura"}',
-  '{"type1":"dessin animé","type2:"amusement"}'
+  '{"type1":"dessin animé","type2":"amusement"}'
 );
 INSERT INTO Film (codeFilm, titre, dateSortie, ageLimit, Distributeur, Realisateur, Producteur,Genre)
 VALUES (
@@ -268,8 +266,7 @@ VALUES (
   '{"nom":"Paramount Pictures"}',
   '{"nom":"Russo","prenom":"Joe"}',
   '{"nom":"Tyler","prenom":"Liv"}',
-  '{"type1":"ficton","type2:"Super héros"}'
-  ;
+  '{"type1":"ficton","type2":"Super héros"}'
 );
 
 ----Client--
@@ -1348,8 +1345,6 @@ INSERT INTO Noter(idClient,codeFilm, value) VALUES (55555,12347,2);
 INSERT INTO Noter(idClient,codeFilm, value) VALUES (55555,12340,3);
 
 INSERT INTO Noter(idClient,codeFilm, value) VALUES (66666,12343,4);
-INSERT INTO Noter(idClient,codeFilm, value) VALUES (66666,12343,2);
-INSERT INTO Noter(idClient,codeFilm, value) VALUES (66666,12343,4);
 
 INSERT INTO Noter(idClient,codeFilm, value) VALUES (77777,12342,3);
 INSERT INTO Noter(idClient,codeFilm, value) VALUES (77777,12343,5);
@@ -1454,17 +1449,16 @@ INSERT INTO payer(idproduit, idClient, quantité) VALUES(913006,33033,1);
 
 ----liste de clients--------------------------------------------------------------------
 
-CREATE VIEW vListedeClients
+CREATE VIEW vListedeClients AS
 SELECT
 Client.nom,
 Client.prenom,
 Client.dateNaissance,
-Client.ageClient,
 Film.titre,
 Abonnement->>'Status' AS membre,
 Abonnement->>'placeEncore' AS place_Encore
 FROM Client, Film, Noter
-WHERE (Client.idClient = Noter.idClient) AND (Film.codeFilm = Noter.codeFilm)
+WHERE (Client.idClient = Noter.idClient) AND (Film.codeFilm = Noter.codeFilm);
 
 
 ----Ventes et vente de billets-------------------------------------------------------------
@@ -1473,73 +1467,58 @@ CREATE VIEW vRevenu AS
 SELECT
 COUNT(codeticket),
 SUM(CAST(inforTicket->>'tarif' AS INTEGER)) AS total
-FROM Entree
+FROM Entree;
 
 
 -----Informations sur le film--------------------------------------------------------------
 
-CREATE VIEW vInformationsdefilm
+CREATE VIEW vInformationsdefilm AS
 SELECT
 titre,
 dateSortie,
 ageLimit,
 Distributeur->>'nom' AS distributeur_nom,
-CONCAT(CAST(Realisateur->>'nom' AS VARCHAR) , CAST(Realisateur->>'prneom' AS VARCHAR)) AS Realisateur,
-CONCAT(CAST(Producteur->>'nom' AS VARCHAR) , CAST(Producteur->>'prenom' AS VARCHAR)) AS Producteur,
-CONCAT(CAST(Genre->>'type1' AS VARCHAR) , CAST(Genre->>'type2' AS VARCHAR)) AS Genre,
-FROM Film
+CONCAT(CAST(Realisateur->>'nom' AS VARCHAR) , ' ', CAST(Realisateur->>'prenom' AS VARCHAR)) AS Realisateur,
+CONCAT(CAST(Producteur->>'nom' AS VARCHAR) , ' ', CAST(Producteur->>'prenom' AS VARCHAR)) AS Producteur,
+CONCAT(CAST(Genre->>'type1' AS VARCHAR), ' | ', CAST(Genre->>'type2' AS VARCHAR)) AS Genre
+FROM Film;
 
 
 CREATE VIEW vRevenuDeFilm AS
 SELECT
 Film.titre,
-SUM(CAST(Entre.inforTicket->>'tarif' AS INTEGER)) AS Revenu
+SUM(CAST(Entree.inforTicket->>'tarif' AS INTEGER)) AS Revenu
 FROM Film, Entree, Seance
 WHERE
   (Film.titre = CAST(Seance.détail->>'titre_du_film' AS VARCHAR))
   AND (Entree.codeSeance = Seance.codeSeance)
+GROUP BY Film.codeFilm;
 
 
 CREATE VIEW vHoraireDuFilmAffiché AS
-SELECT
-Seance.jour,
-Seance.heureDebut,
-Film.titre,
-Film.ageLimit,
-Seance.placeOccupees,
-Seance.placeVendues,
-Seance.duree
-FROM Film, Seance
-WHERE
-  (Film.titre = CAST(Seance.détail->>'titre_du_film' AS VARCHAR))
-  AND (Seance.jour < GETDATE())
+SELECT *
+FROM Seance
+WHERE (Seance.jour < current_date);
 
 CREATE VIEW vHoraireDuFilmAvenue AS
-SELECT
-Seance.jour,
-Seance.heureDebut,
-Film.titre,
-Film.ageLimit,
-Seance.placeOccupees,
-Seance.placeVendues,
-Seance.duree
-FROM Film, Seance
-WHERE
-  (Film.titre = CAST(Seance.détail->>'titre_du_film' AS VARCHAR))
-  AND (GETDATE() <= Seance.jour)
+SELECT *
+FROM Seance
+WHERE (current_date <= Seance.jour);
 
 CREATE VIEW vMoyenneduFilm AS
-SELECT Film.titre, SUM(Noter.value), SUM(Noter.Value)/SUM(Noter.idClient)
-FROM Film, Noter
-WHERE (Film.codeFilm = Noter.codeFilm)
-
+  SELECT Film.titre, ROUND(SUM(Noter.Value)*1.0/COUNT(Noter.idClient), 2) AS NoteMoyenne
+  FROM Film, Noter
+  WHERE (Film.codeFilm = Noter.codeFilm)
+  GROUP BY Film.codeFilm;
 
 ----vente de produits-------------------------------------------------------------------
 CREATE VIEW vRevenusdesproduits AS
- (SELECT boisson.nomboisson, SUM(payer.quantité), SUM(payer.quantité*boisson.tarifboisson)
+ (SELECT boisson.nomboisson AS nomproduits, SUM(payer.quantité) AS Quantite, SUM(payer.quantité*boisson.tarifboisson) AS Revenu
         FROM boisson, payer
-        WHERE (boisson.idproduit=payer.idproduit))
+        WHERE (boisson.idproduit=payer.idproduit)
+        GROUP BY boisson.idproduit)
   UNION
- (SELECT alimentaire,nomalimentaire, SUM(payer.quantité), SUM(payer.quantité*alimentaire.tarifalimentaire)
+ (SELECT alimentaire.nomalimentaire AS nomproduits, SUM(payer.quantité) AS Quantite, SUM(payer.quantité*alimentaire.tarifalimentaire) AS Revenu
         FROM alimentaire, payer
-        WHERE (alimentaire.idproduit=payer.idproduit))
+        WHERE (alimentaire.idproduit=payer.idproduit)
+        GROUP BY alimentaire.idproduit);
