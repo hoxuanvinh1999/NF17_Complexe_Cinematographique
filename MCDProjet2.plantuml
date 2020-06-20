@@ -79,7 +79,6 @@
      nom: string
      prenom: string
      dateNaissance: date
-     ageClient: int
     }
     class Noter{
      value: 0..5
